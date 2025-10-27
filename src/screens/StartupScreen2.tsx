@@ -23,7 +23,7 @@ export default function StartupScreen2({ navigation }: Props) {
           <CustomButton
             title="Iniciar sesión"
             mode="solid"
-            onPress={() => navigation.navigate('Login')} // Asume que tienes una pantalla 'Login'
+            onPress={() => navigation.navigate('Login')} // Ir al'Login' (aun no esta hecho)
           />
           <CustomButton
             title="Registrarse"

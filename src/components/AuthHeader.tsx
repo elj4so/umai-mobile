@@ -27,7 +27,7 @@ export default function AuthHeader() {
 
       {/* 2. La imagen de fondo, "enmascarada" por el View principal */}
       <ImageBackground
-        //source={require('../assets/food-pattern.png')} // ¡Asegúrate que esta ruta es correcta!
+        //source={require('./assets/food-pattern.png')} // Ruta Ejemplo: Fondo Imagen
         style={styles.imageBackground}
         imageStyle={styles.imageOpacity} // Aplica opacidad a la imagen
       />

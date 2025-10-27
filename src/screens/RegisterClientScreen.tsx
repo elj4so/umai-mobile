@@ -136,7 +136,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
           // Necesitas añadir 'disabled' a tu componente CustomButton
           // disabled={isButtonDisabled} 
         />
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}> {/* Ir al'Login' (aun no esta hecho)*/}
           <Text style={styles.loginLink}>
             ¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text>
           </Text>

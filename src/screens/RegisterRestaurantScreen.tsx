@@ -134,7 +134,7 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
           mode="solid"
           // disabled={...}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}> {/* Ir al'Login' (aun no esta hecho)*/}
           <Text style={styles.loginLink}>
             ¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text>
           </Text>

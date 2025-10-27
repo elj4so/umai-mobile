@@ -36,7 +36,6 @@ export const AppNavigator = () => {
       {/*<Stack.Screen name="Login" component={LoginScreen} />*/}
       <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
       <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
-      {/* ... etc */}
     </Stack.Navigator>
   );
 };
