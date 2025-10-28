@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7F7F7', // Un gris muy claro
+    backgroundColor: '#F7F7F7', // Un gris muy claro claro
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
