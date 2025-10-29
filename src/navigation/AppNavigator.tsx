@@ -10,7 +10,7 @@ import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
 
 
-// Define los tipos de parámetros para cada ruta
+// Parámetros para cada ruta
 export type AuthStackParamList = {
   Startup1: undefined;
   Startup2: undefined;
@@ -33,7 +33,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="Startup1" component={StartupScreen1} />
       <Stack.Screen name="Startup2" component={StartupScreen2} />
       <Stack.Screen name="RegisterType" component={RegisterTypeScreen} />
-      {/*<Stack.Screen name="Login" component={LoginScreen} />*/}
+      {/*Para la Screen Login <Stack.Screen name="Login" component={LoginScreen} />*/}
       <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
       <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
     </Stack.Navigator>
