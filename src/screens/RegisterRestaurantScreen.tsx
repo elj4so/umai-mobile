@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert, Image } 
 import { StackNavigationProp } from '@react-navigation/stack';
 import PagerView from 'react-native-pager-view';
 import { Feather } from '@expo/vector-icons';
-// import * as ImagePicker from 'expo-image-picker'; // Necesitarás esto: expo install expo-image-picker
+// import * as ImagePicker from 'expo-image-picker'; // expo install expo-image-picker
 
 import { AuthStackParamList } from '../navigation/AppNavigator';
 import { COLORS } from '../constants/colors';
@@ -33,13 +33,12 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
   const [address, setAddress] = useState('');
   // Paso 3
   const [deliveryFormat, setDeliveryFormat] = useState('');
-  // Paso 4 (Asumo un paso de "Categorías" o "Menú" ya que hay 4 puntos)
-  // ...
+  // Paso 4 ("Categorías" o "Menú")
 
   // --- Lógica de Botón ---
   const isLastPage = page === 3; // 4 páginas (0, 1, 2, 3)
   
-  // (Aquí iría tu lógica de validación por paso)
+  // (Aquí iría la lógica de validación por paso)
   
   const handleButtonPress = () => {
     if (isLastPage) {
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   
-  pager: { flex: 1, marginTop: 10 }, // Damos espacio a la foto de perfil
+  pager: { flex: 1, marginTop: 10 },
   page: { padding: 24, paddingTop: 10 },
   bottomContainer: { padding: 24, paddingTop: 0 },
   loginLink: { fontSize: 16, color: COLORS.textSecondary, textAlign: 'center', marginTop: 16 },

@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { AuthStackParamList } from '../navigation/AppNavigator';
 import { COLORS } from '../constants/colors';
 
-// Importa todos los componentes que creamos
+// Componentes
 import AuthHeader from '../components/AuthHeader';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
@@ -18,7 +18,7 @@ type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'RegisterClient'>;
 };
 
-// --- Definimos las categorías aquí ---
+// --- Categorías ---
 const CATEGORIES = [
   'Mexicana', 'Italiana', 'Japonesa', 'China', 'India', 'Americana',
   'Vegetariano', 'Vegano', 'Mariscos', 'Postres', 'Snacks', 'Café',
@@ -50,11 +50,9 @@ export default function RegisterClientScreen({ navigation }: Props) {
   };
   
   // --- Lógica del Botón Principal ---
-  // Modifiqué tu CustomButton para aceptar 'disabled'. 
-  // Si no lo hiciste, tendrás que agregarlo.
   const isLastPage = page === 2;
   
-  // Validaciones (muy simples, puedes mejorarlas)
+  // Validaciones (mejoras pronto)
   const isStep1Valid = name.length > 2 && email.includes('@') && phone.length > 7;
   const isStep2Valid = password.length > 5 && password === confirmPassword;
   const isStep3Valid = selectedCategories.length > 0 && selectedCategories.length <= 5;
@@ -70,7 +68,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
       const formData = { name, email, phone, password, selectedCategories };
       console.log('Enviando al backend:', formData);
       Alert.alert('¡Registro Exitoso!', 'Tu cuenta ha sido creada.');
-      // Aquí navegarías a la app principal
+      // Aquí se navega a la app principal
       // navigation.navigate('AppHome');
     } else {
       // Avanza a la siguiente página
@@ -133,7 +131,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
           title={isLastPage ? "Registrarse" : "Siguiente"}
           onPress={handleButtonPress}
           mode="solid"
-          // Necesitas añadir 'disabled' a tu componente CustomButton
+          // Se necesita añadir 'disabled' al componente CustomButton
           // disabled={isButtonDisabled} 
         />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}> {/* Ir al'Login' (aun no esta hecho)*/}
@@ -148,7 +146,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: COLORS.white },
-  backButton: { position: 'absolute', top: 50, left: 20, zIndex: 10 }, // Ajusta 'top' según tu header
+  backButton: { position: 'absolute', top: 50, left: 20, zIndex: 10 }, // Ajusta 'top' según el header
   titleContainer: { alignItems: 'center', marginTop: 20 },
   title: { fontSize: 28, fontWeight: 'bold', color: COLORS.text },
   pager: { flex: 1 },

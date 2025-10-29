@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AppNavigator'; // Importa tus tipos
+import { AuthStackParamList } from '../navigation/AppNavigator';
 import { COLORS } from '../constants/colors';
 
-// Importa tus componentes
+// Componentes
 import AuthHeader from '../components/AuthHeader';
 import CustomButton from '../components/CustomButton';
 
-// Define el tipo de las props de navegación
+// Props de navegación
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'Startup1'>;
 };
