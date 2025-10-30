@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Pantallas
 import StartupScreen1 from '../screens/StartupScreen1';
 import StartupScreen2 from '../screens/StartupScreen2';
-//import LoginScreen from '../screens/LoginScreen';
+import LoginScreen from '../screens/LoginScreen';
 import RegisterTypeScreen from '../screens/RegisterTypeScreen';
 import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
@@ -33,7 +33,11 @@ export const AppNavigator = () => {
       <Stack.Screen name="Startup1" component={StartupScreen1} />
       <Stack.Screen name="Startup2" component={StartupScreen2} />
       <Stack.Screen name="RegisterType" component={RegisterTypeScreen} />
+<<<<<<< Updated upstream
       {/*Para la Screen Login <Stack.Screen name="Login" component={LoginScreen} />*/}
+=======
+      {<Stack.Screen name="Login" component={LoginScreen} />}
+>>>>>>> Stashed changes
       <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
       <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
     </Stack.Navigator>
