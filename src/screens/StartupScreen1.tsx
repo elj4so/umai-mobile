@@ -1,14 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AppNavigator';
-import { COLORS } from '../constants/colors';
 
+// Navegación
+import { AuthStackParamList } from '../navigation/AppNavigator';
+// Estilos Colores
+import { COLORS } from '../constants/colors';
 // Componentes
 import AuthHeader from '../components/AuthHeader';
 import CustomButton from '../components/CustomButton';
 
-// Props de navegación
+// Props de Navegación
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'Startup1'>;
 };
@@ -17,17 +20,12 @@ export default function StartupScreen1({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <AuthHeader />
-      
       <View style={styles.contentContainer}>
-        {/* Contenido de arriba */}
         <View>
           <Text style={styles.title}>UMAI</Text>
-          <Text style={styles.subtitle}>
-            Lorem ipsum dolor sit amet consectetur. Lorem id sit
-          </Text>
+          <Text style={styles.subtitle}> Lorem ipsum dolor sit amet consectetur. Lorem id sit </Text>
         </View>
-
-        {/* Botón de abajo */}
+        {/* Botón Continuar */}
         <CustomButton
           title="Continuar"
           mode="solid"
@@ -38,6 +36,7 @@ export default function StartupScreen1({ navigation }: Props) {
   );
 }
 
+// Estilos
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,

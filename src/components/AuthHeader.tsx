@@ -5,7 +5,7 @@ import { COLORS } from '../constants/colors';
 
 // Obtenemos el ancho de la pantalla para que el SVG sea responsivo
 const { width } = Dimensions.get('window');
-const HEADER_HEIGHT = 250; // Altura del header
+const HEADER_HEIGHT = 60; // Altura del header (328)
 
 export default function AuthHeader() {
   // Esta es la "ruta" que dibuja la curva SVG
@@ -34,7 +34,7 @@ export default function AuthHeader() {
     </View>
   );
 }
-
+//Estilos
 const styles = StyleSheet.create({
   container: {
     height: HEADER_HEIGHT,

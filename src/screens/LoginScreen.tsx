@@ -1,193 +1,118 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; 
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-export default function LoginScreen() {
+// Navegación
+import { AuthStackParamList } from '../navigation/AppNavigator';
+// Estilos Colores
+import { COLORS } from '../constants/colors';
+// Componentes
+import AuthHeader from '../components/AuthHeader';
+import CustomButton from '../components/CustomButton';
+import CustomInput from '../components/CustomInput';
+
+// Props de Navegación
+type Props = {
+  navigation: StackNavigationProp<AuthStackParamList, 'Login'>;
+};
+
+export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+
+  // Lógica Iniciar Sesión
+  const handleLogin = () => {
+    console.log({ email, password });
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Decorative Header */}
-      <View style={styles.header}>
-        <View style={styles.decorativePattern} />
-      </View>
-
-      {/* Main Content */}
-      <View style={styles.content}>
-        {/* Logo/Brand */}
-        <Text style={styles.logo}>UMAI</Text>
-
-        {/* Title */}
-        <Text style={styles.title}>Iniciar Sesión</Text>
-
-        {/* Email Field */}
-        <View style={styles.inputGroup}>
-          <View style={styles.labelContainer}>
-            <Mail size={16} color="#000" />
-            <Text style={styles.label}>Correo Electrónico</Text>
-          </View>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingrese su correo electrónico"
-            placeholderTextColor="#999"
+    <SafeAreaView style={styles.safeArea}>
+      <AuthHeader />
+      <View style={styles.contentContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>UMAI</Text>
+          <Text style={styles.subtitle}>Iniciar Sesión</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          {/* 1. Input: Correo Electrónico */}
+          <CustomInput
+            iconName="mail"
+            placeholder="Correo Electrónico"
             value={email}
             onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
+          />
+          {/* 2. Input: Contraseña */}
+          <CustomInput
+            iconName="lock"
+            placeholder="Contraseña"
+            value={password}
+            onChangeText={setPassword}
+            isPassword={true}
           />
         </View>
-
-        {/* Password Field */}
-        <View style={styles.inputGroup}>
-          <View style={styles.labelContainer}>
-            <Lock size={16} color="#000" />
-            <Text style={styles.label}>Contraseña</Text>
-          </View>
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Ingrese su contraseña"
-              placeholderTextColor="#999"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!showPassword}
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              {showPassword ? (
-                <EyeOff size={20} color="#999" />
-              ) : (
-                <Eye size={20} color="#999" />
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Login Button */}
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        </TouchableOpacity>
-
-        {/* Sign Up Link */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
-          <TouchableOpacity>
-            <Text style={styles.linkText}>Regístrate</Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
-    </View>
+         {/* Botón Iniciar Sesión */}
+      <View style={styles.bottomContainer}>
+        <CustomButton
+          title="Iniciar Sesión"
+          mode="solid"
+          onPress={handleLogin}
+        />
+        <TouchableOpacity onPress={() => navigation.navigate('RegisterType')}>
+          <Text style={styles.registerLink}>¿No tienes una cuenta? <Text style={styles.registerLinkBold}>Regístrate</Text></Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: COLORS.white 
+  },
+  contentContainer: {
     flex: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'space-between', // Separa títulos, botones y link
+    padding: 24,
+    paddingBottom: 40,
   },
-  header: {
-    height: 200,
-    backgroundColor: '#FF7B7B',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 150,
-    overflow: 'hidden',
-  },
-  decorativePattern: {
-    width: '100%',
-    height: '100%',
-    opacity: 0.2,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 32,
-    paddingTop: 40,
-  },
-  logo: {
-    fontSize: 64,
-    fontWeight: '900',
-    textAlign: 'center',
-    letterSpacing: 4,
-    marginBottom: 32,
-    color: '#000',
+  titleContainer: { 
+    alignItems: 'center', 
+    marginTop: 20 
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 56,
+    fontWeight: 'bold',
+    color: COLORS.black,
     textAlign: 'center',
-    marginBottom: 40,
-    color: '#000',
   },
-  inputGroup: {
-    marginBottom: 24,
-  },
-  labelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 6,
-  },
-  label: {
-    fontSize: 14,
+  subtitle: {
+    fontSize: 24,
     fontWeight: '600',
-    color: '#000',
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    marginTop: 8,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#D1D1D1',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 14,
-    color: '#000',
-  },
-  passwordContainer: {
-    flexDirection: 'row',
+  inputContainer:{
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#D1D1D1',
-    borderRadius: 12,
-    paddingRight: 12,
+    marginBottom: 80
   },
-  passwordInput: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 14,
-    color: '#000',
+  bottomContainer: { 
+    padding: 24, 
+    paddingTop: 0 
   },
-  eyeIcon: {
-    padding: 4,
+  registerLink: { 
+    fontSize: 16, 
+    color: COLORS.textSecondary, 
+    textAlign: 'center', 
+    marginTop: 16 
   },
-  button: {
-    backgroundColor: '#FF8B8B',
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 120,
-    marginBottom: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#000',
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#FF7B7B',
-    fontWeight: '600',
+  registerLinkBold: { 
+    color: COLORS.primary, 
+    fontWeight: 'bold' 
   },
 });

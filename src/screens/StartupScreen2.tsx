@@ -1,12 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AppNavigator';
-import { COLORS } from '../constants/colors';
 
+// Navegación
+import { AuthStackParamList } from '../navigation/AppNavigator';
+// Estilos Colores
+import { COLORS } from '../constants/colors';
+// Componentes
 import AuthHeader from '../components/AuthHeader';
 import CustomButton from '../components/CustomButton';
 
+// Props de Navegación
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'Startup2'>;
 };
@@ -15,16 +20,16 @@ export default function StartupScreen2({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <AuthHeader />
-      
       <View style={styles.contentContainer}>
         <Text style={styles.title}>UMAI</Text>
-
+        {/* Botón Iniciar sesión */}
         <View style={styles.buttonContainer}>
           <CustomButton
             title="Iniciar sesión"
             mode="solid"
-            onPress={() => navigation.navigate('Login')} // Ir al'Login' (aun no esta hecho)
+            onPress={() => navigation.navigate('Login')}
           />
+          {/* Botón Registrarse*/}
           <CustomButton
             title="Registrarse"
             mode="outlined"
@@ -35,7 +40,7 @@ export default function StartupScreen2({ navigation }: Props) {
     </SafeAreaView>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,

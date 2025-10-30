@@ -22,7 +22,7 @@ export default function PaginationDots({ count, activeIndex }: PaginationDotsPro
     </View>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

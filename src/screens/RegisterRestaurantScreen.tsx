@@ -1,18 +1,22 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import PagerView from 'react-native-pager-view';
 import { Feather } from '@expo/vector-icons';
 // import * as ImagePicker from 'expo-image-picker'; // expo install expo-image-picker
 
+// Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
+// Estilos Colores
 import { COLORS } from '../constants/colors';
-
+// Componentes
 import AuthHeader from '../components/AuthHeader';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import PaginationDots from '../components/PaginationDots';
 
+// Props de Navegación
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'RegisterRestaurant'>;
 };
@@ -21,7 +25,7 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
   const [page, setPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
 
-  // --- Estados del Formulario ---
+  // Formulario
   const [profilePic, setProfilePic] = useState<string | null>(null);
   // Paso 1
   const [name, setName] = useState('');
@@ -35,7 +39,7 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
   const [deliveryFormat, setDeliveryFormat] = useState('');
   // Paso 4 ("Categorías" o "Menú")
 
-  // --- Lógica de Botón ---
+  // Lógica de Botón
   const isLastPage = page === 3; // 4 páginas (0, 1, 2, 3)
   
   // (Aquí iría la lógica de validación por paso)
@@ -51,7 +55,7 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
     }
   };
 
-  // --- Lógica de Imagen (Ejemplo) ---
+  // Lógica de Imagen (Ejemplo)
   const pickImage = async () => {
     // Pedir permisos (necesario en iOS)
     // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,32 +103,29 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
         onPageSelected={(e) => setPage(e.nativeEvent.position)}
         scrollEnabled={false}
       >
-        {/* --- Página 1: Datos Personales --- */}
+        {/* Página 1: Datos Personales */}
         <View key="1" style={styles.page}>
           <CustomInput iconName="user" placeholder="Nombre del restaurante" value={name} onChangeText={setName} />
           <CustomInput iconName="mail" placeholder="Correo electrónico" value={email} onChangeText={setEmail} />
           <CustomInput iconName="phone" placeholder="Número de teléfono" value={phone} onChangeText={setPhone} />
         </View>
-
-        {/* --- Página 2: Contraseña y Dirección --- */}
+        {/* Página 2: Contraseña y Dirección */}
         <View key="2" style={styles.page}>
           <CustomInput iconName="lock" placeholder="Contraseña" value={password} onChangeText={setPassword} isPassword />
           <CustomInput iconName="lock" placeholder="Confirmar contraseña" value={confirmPassword} onChangeText={setConfirmPassword} isPassword />
           <CustomInput iconName="map-pin" placeholder="Dirección" value={address} onChangeText={setAddress} />
         </View>
-
-        {/* --- Página 3: Delivery --- */}
+        {/* Página 3: Delivery */}
         <View key="3" style={styles.page}>
           <CustomInput iconName="truck" placeholder="Formato de delivery (ej. 'Propio', 'Rappi')" value={deliveryFormat} onChangeText={setDeliveryFormat} />
-        </View>
-        
-        {/* --- Página 4: (Asumida) --- */}
+        </View> 
+        {/* Página 4: (Asumida) */}
         <View key="4" style={styles.page}>
           <Text style={styles.categoryTitle}>Paso final</Text>
           <Text style={styles.categorySubtitle}>Aquí irían más campos (ej. categorías, menú)</Text>
         </View>
       </PagerView>
-
+      {/* Botón Siguiente/Registrarse */}
       <View style={styles.bottomContainer}>
         <PaginationDots count={4} activeIndex={page} />
         <CustomButton
@@ -133,23 +134,34 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
           mode="solid"
           // disabled={...}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}> {/* Ir al'Login' (aun no esta hecho)*/}
-          <Text style={styles.loginLink}>
-            ¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text>
-          </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.loginLink}>¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text></Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.white },
-  backButton: { position: 'absolute', top: 50, left: 20, zIndex: 10 },
-  titleContainer: { alignItems: 'center', marginTop: 20 },
-  title: { fontSize: 28, fontWeight: 'bold', color: COLORS.text },
-  
-  // Estilos de Foto de Perfil
+  safeArea: { 
+    flex: 1, 
+    backgroundColor: COLORS.white 
+  },
+  backButton: { 
+    position: 'absolute', 
+    top: 50, 
+    left: 20, 
+    zIndex: 10 
+  },
+  titleContainer: { 
+    alignItems: 'center', 
+    marginTop: 20 
+  },
+  title: { 
+    fontSize: 28, 
+    fontWeight: 'bold', 
+    color: COLORS.text 
+  },
   profilePicContainer: {
     width: 130,
     height: 130,
@@ -172,14 +184,38 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     marginTop: 8,
   },
-  
-  pager: { flex: 1, marginTop: 10 },
-  page: { padding: 24, paddingTop: 10 },
-  bottomContainer: { padding: 24, paddingTop: 0 },
-  loginLink: { fontSize: 16, color: COLORS.textSecondary, textAlign: 'center', marginTop: 16 },
-  loginLinkBold: { color: COLORS.primary, fontWeight: 'bold' },
-  
-  // Estilos genéricos
-  categoryTitle: { fontSize: 20, fontWeight: '600', color: COLORS.text, textAlign: 'center' },
-  categorySubtitle: { fontSize: 14, color: COLORS.textSecondary, textAlign: 'center', marginBottom: 16 },
+  pager: { 
+    flex: 1, 
+    marginTop: 10 
+  },
+  page: { 
+    padding: 24, 
+    paddingTop: 10 
+  },
+  bottomContainer: { 
+    padding: 24, 
+    paddingTop: 0 
+  },
+  loginLink: { 
+    fontSize: 16,
+    color: COLORS.textSecondary, 
+    textAlign: 'center', 
+    marginTop: 16 
+  },
+  loginLinkBold: { 
+    color: COLORS.primary, 
+    fontWeight: 'bold' 
+  },
+  categoryTitle: { 
+    fontSize: 20, 
+    fontWeight: '600', 
+    color: COLORS.text, 
+    textAlign: 'center' 
+  },
+  categorySubtitle: { 
+    fontSize: 14, 
+    color: COLORS.textSecondary, 
+    textAlign: 'center', 
+    marginBottom: 16 
+  },
 });

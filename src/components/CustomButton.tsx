@@ -22,9 +22,9 @@ export default function CustomButton({ title, onPress, mode = 'solid' }: CustomB
     </TouchableOpacity>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
-  // Estilos base compartidos
+  // Base Compartidos
   containerBase: {
     width: '100%',
     paddingVertical: 16,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Estilos para el botón SÓLIDO
+  // Botón SÓLIDO
   containerSolid: {
     backgroundColor: COLORS.primary,
   },
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
 
-  // Estilos para el botón BORDEADO
+  // Botón BORDEADO
   containerOutlined: {
     backgroundColor: COLORS.white,
     borderWidth: 1,

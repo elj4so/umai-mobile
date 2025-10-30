@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons'; // Usaremos Feather icons
+import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 
 type CustomInputProps = {
@@ -40,7 +40,7 @@ export default function CustomInput({
     </View>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

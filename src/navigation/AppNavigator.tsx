@@ -14,7 +14,7 @@ import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
 export type AuthStackParamList = {
   Startup1: undefined;
   Startup2: undefined;
-  //Login: undefined;
+  Login: undefined;
   RegisterType: undefined;
   RegisterClient: undefined;
   RegisterRestaurant: undefined;
@@ -33,11 +33,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="Startup1" component={StartupScreen1} />
       <Stack.Screen name="Startup2" component={StartupScreen2} />
       <Stack.Screen name="RegisterType" component={RegisterTypeScreen} />
-<<<<<<< Updated upstream
-      {/*Para la Screen Login <Stack.Screen name="Login" component={LoginScreen} />*/}
-=======
-      {<Stack.Screen name="Login" component={LoginScreen} />}
->>>>>>> Stashed changes
+      <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
       <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
     </Stack.Navigator>

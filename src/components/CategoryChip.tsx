@@ -23,7 +23,7 @@ export default function CategoryChip({ label, isSelected, onPress }: CategoryChi
     </TouchableOpacity>
   );
 }
-
+// Estilos
 const styles = StyleSheet.create({
   chip: {
     borderRadius: 20,
