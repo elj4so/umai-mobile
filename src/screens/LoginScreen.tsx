@@ -1,15 +1,15 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'; 
 import { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Feather } from '@expo/vector-icons';
 
 // Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
 // Estilos Colores
 import { COLORS } from '../constants/colors';
 // Componentes
-import AuthHeader from '../components/AuthHeader';
+import WaveHeader from '../components/WaveHeader';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 
@@ -29,7 +29,10 @@ export default function LoginScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AuthHeader />
+      <WaveHeader />
+      <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
+        <Feather name="arrow-left" size={28} color={COLORS.white} />
+      </TouchableOpacity>
       <View style={styles.contentContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>UMAI</Text>
@@ -61,9 +64,12 @@ export default function LoginScreen({ navigation }: Props) {
           mode="solid"
           onPress={handleLogin}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterType')}>
-          <Text style={styles.registerLink}>¿No tienes una cuenta? <Text style={styles.registerLinkBold}>Regístrate</Text></Text>
-        </TouchableOpacity>
+        <View style={styles.footerContainer}>
+          <Text style={styles.registerLink}> ¿Ya tienes una cuenta? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('RegisterType')}>
+            <Text style={styles.registerLinkBold}> Registrarse </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -74,6 +80,12 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: COLORS.white 
   },
+  backButton: { 
+    position: 'absolute', 
+    top: 50,
+    left: 20, 
+    zIndex: 100
+  },
   contentContainer: {
     flex: 1,
     justifyContent: 'space-between', // Separa títulos, botones y link
@@ -82,7 +94,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: { 
     alignItems: 'center', 
-    marginTop: 20 
+    marginTop: 85 
   },
   title: {
     fontSize: 56,
@@ -105,6 +117,12 @@ const styles = StyleSheet.create({
     padding: 24, 
     paddingTop: 0 
   },
+  footerContainer: {
+    flexDirection: 'row', // Esto los pone uno al lado del otro
+    justifyContent: 'center', // Centra el grupo
+    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
+    marginTop: 16, // El margen que tenías en el loginLink
+  },
   registerLink: { 
     fontSize: 16, 
     color: COLORS.textSecondary, 
@@ -112,7 +130,10 @@ const styles = StyleSheet.create({
     marginTop: 16 
   },
   registerLinkBold: { 
+    fontSize: 16,
     color: COLORS.primary, 
-    fontWeight: 'bold' 
+    textAlign: 'center', 
+    marginTop: 16,
+    fontWeight: 'bold'
   },
 });

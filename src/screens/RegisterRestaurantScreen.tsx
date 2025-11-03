@@ -11,7 +11,7 @@ import { AuthStackParamList } from '../navigation/AppNavigator';
 // Estilos Colores
 import { COLORS } from '../constants/colors';
 // Componentes
-import AuthHeader from '../components/AuthHeader';
+import WaveHeader from '../components/WaveHeader';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
 import PaginationDots from '../components/PaginationDots';
@@ -77,8 +77,8 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AuthHeader />
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <WaveHeader />
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterType')} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       
@@ -134,9 +134,12 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
           mode="solid"
           // disabled={...}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.loginLink}>¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text></Text>
-        </TouchableOpacity>
+        <View style={styles.footerContainer}>
+          <Text style={styles.loginLink}> ¿Ya tienes una cuenta? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.loginLinkBold}> Inicia sesión </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -151,11 +154,11 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     top: 50, 
     left: 20, 
-    zIndex: 10 
+    zIndex: 100
   },
   titleContainer: { 
     alignItems: 'center', 
-    marginTop: 20 
+    marginTop: 85
   },
   title: { 
     fontSize: 28, 
@@ -163,8 +166,8 @@ const styles = StyleSheet.create({
     color: COLORS.text 
   },
   profilePicContainer: {
-    width: 130,
-    height: 130,
+    width: 110,
+    height: 110,
     borderRadius: 65,
     backgroundColor: '#F7F7F7',
     justifyContent: 'center',
@@ -175,14 +178,14 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
   },
   profilePic: {
-    width: 130,
-    height: 130,
+    width: 110,
+    height: 110,
     borderRadius: 65,
   },
   profilePicText: {
     textAlign: 'center',
     color: COLORS.textSecondary,
-    marginTop: 8,
+    marginTop: 10,
   },
   pager: { 
     flex: 1, 
@@ -196,15 +199,24 @@ const styles = StyleSheet.create({
     padding: 24, 
     paddingTop: 0 
   },
+  footerContainer: {
+    flexDirection: 'row', // Esto los pone uno al lado del otro
+    justifyContent: 'center', // Centra el grupo
+    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
+    marginTop: 16, // El margen que tenías en el loginLink
+  },
   loginLink: { 
     fontSize: 16,
     color: COLORS.textSecondary, 
     textAlign: 'center', 
     marginTop: 16 
   },
-  loginLinkBold: { 
+  loginLinkBold: {
+    fontSize: 16,
     color: COLORS.primary, 
-    fontWeight: 'bold' 
+    textAlign: 'center', 
+    marginTop: 16,
+    fontWeight: 'bold'
   },
   categoryTitle: { 
     fontSize: 20, 

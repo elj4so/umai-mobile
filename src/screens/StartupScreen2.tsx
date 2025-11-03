@@ -8,7 +8,7 @@ import { AuthStackParamList } from '../navigation/AppNavigator';
 // Estilos Colores
 import { COLORS } from '../constants/colors';
 // Componentes
-import AuthHeader from '../components/AuthHeader';
+import WaveHeader from '../components/WaveHeader';
 import CustomButton from '../components/CustomButton';
 
 // Props de Navegación
@@ -19,7 +19,7 @@ type Props = {
 export default function StartupScreen2({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AuthHeader />
+      <WaveHeader />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>UMAI</Text>
         {/* Botón Iniciar sesión */}

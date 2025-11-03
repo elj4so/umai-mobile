@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Feather } from '@expo/vector-icons';
 
 // Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
 // Estilos Colores
 import { COLORS } from '../constants/colors';
 // Componentes
-import AuthHeader from '../components/AuthHeader';
+import WaveHeader from '../components/WaveHeader';
 import CustomButton from '../components/CustomButton';
 
 // Props de Navegación
@@ -19,8 +20,11 @@ type Props = {
 export default function RegisterTypeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* TODO: Actualizar AuthHeader para que acepte un botón de "atrás" */}
-      <AuthHeader />
+      {/* TODO: Actualizar WaveHeader para que acepte un botón de "atrás" */}
+      <WaveHeader />
+      <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
+        <Feather name="arrow-left" size={28} color={COLORS.white} />
+      </TouchableOpacity>
       <View style={styles.contentContainer}>
         <View>
           <Text style={styles.title}>UMAI</Text>
@@ -39,8 +43,11 @@ export default function RegisterTypeScreen({ navigation }: Props) {
             mode="outlined"
             onPress={() => navigation.navigate('RegisterRestaurant')}
           />
+        </View>
+        <View style={styles.footerContainer}>
+          <Text style={styles.loginLink}> ¿Ya tienes una cuenta? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-           <Text style={styles.loginLink}> ¿Ya tienes una cuenta? <Text style={styles.loginLinkBold}>Inicia sesión</Text></Text>
+            <Text style={styles.loginLinkBold}> Inicia sesión </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -52,6 +59,12 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.white,
+  },
+  backButton: { 
+    position: 'absolute', 
+    top: 50, 
+    left: 20, 
+    zIndex: 100
   },
   contentContainer: {
     flex: 1,
@@ -75,14 +88,23 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
   },
-  loginLink: {
+  footerContainer: {
+    flexDirection: 'row', // Esto los pone uno al lado del otro
+    justifyContent: 'center', // Centra el grupo
+    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
+    marginTop: 16, // El margen que tenías en el loginLink
+  },
+  loginLink: { 
     fontSize: 16,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    marginTop: 60 
+    color: COLORS.textSecondary, 
+    textAlign: 'center', 
+    marginTop: 16 
   },
   loginLinkBold: {
-    color: COLORS.primary,
-    fontWeight: 'bold',
+    fontSize: 16,
+    color: COLORS.primary, 
+    textAlign: 'center', 
+    marginTop: 16,
+    fontWeight: 'bold'
   },
 });
