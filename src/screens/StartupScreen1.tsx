@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -17,13 +17,27 @@ type Props = {
 };
 
 export default function StartupScreen1({ navigation }: Props) {
+  const [umaiPosition, setUmaiPosition] = useState(55);
+
+  const handleUmaiLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setUmaiPosition(y);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <WaveHeader />
+      <WaveHeader targetY={umaiPosition} />
       <View style={styles.contentContainer}>
-        <View>
-          <Text style={styles.title}>UMAI</Text>
-          <Text style={styles.subtitle}> Lorem ipsum dolor sit amet consectetur. Lorem id sit </Text>
+        <View style={styles.textContainer}>
+          <Text 
+            style={styles.title}
+            onLayout={handleUmaiLayout}
+          >
+            UMAI
+          </Text>
+          <Text style={styles.subtitle}>
+            Lorem ipsum dolor sit amet consectetur. Lorem id sit
+          </Text>
         </View>
         {/* Botón Continuar */}
         <CustomButton
@@ -44,21 +58,24 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-between', // Empuja el contenido arriba y el botón abajo
+    justifyContent: 'space-between',
     padding: 24,
     paddingBottom: 40,
+  },
+  textContainer: {
+    marginTop: 150,
   },
   title: {
     fontSize: 56,
     fontWeight: 'bold',
     color: COLORS.black,
-    textAlign: 'center', // Centrado como en el mockup
-    marginTop: 250, // Espacio desde la curva
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 16,
+    paddingHorizontal: 20,
   },
 });

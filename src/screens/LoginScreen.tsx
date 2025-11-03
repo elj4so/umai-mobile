@@ -21,21 +21,33 @@ type Props = {
 export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [umaiPosition, setUmaiPosition] = useState(55); // Posición inicial
 
   // Lógica Iniciar Sesión
   const handleLogin = () => {
     console.log({ email, password });
   };
 
+  // Captura la posición del texto UMAI
+  const handleUmaiLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setUmaiPosition(y);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <WaveHeader />
+      <WaveHeader targetY={umaiPosition} />
       <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       <View style={styles.contentContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>UMAI</Text>
+          <Text 
+            style={styles.title}
+            onLayout={handleUmaiLayout}
+          >
+            UMAI
+          </Text>
           <Text style={styles.subtitle}>Iniciar Sesión</Text>
         </View>
         <View style={styles.inputContainer}>
@@ -57,7 +69,7 @@ export default function LoginScreen({ navigation }: Props) {
         </View>
         
       </View>
-         {/* Botón Iniciar Sesión */}
+      {/* Botón Iniciar Sesión */}
       <View style={styles.bottomContainer}>
         <CustomButton
           title="Iniciar Sesión"
@@ -88,7 +100,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-between', // Separa títulos, botones y link
+    justifyContent: 'space-between',
     padding: 24,
     paddingBottom: 40,
   },
@@ -118,10 +130,10 @@ const styles = StyleSheet.create({
     paddingTop: 0 
   },
   footerContainer: {
-    flexDirection: 'row', // Esto los pone uno al lado del otro
-    justifyContent: 'center', // Centra el grupo
-    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
-    marginTop: 16, // El margen que tenías en el loginLink
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   registerLink: { 
     fontSize: 16, 

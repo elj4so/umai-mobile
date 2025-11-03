@@ -31,6 +31,7 @@ const CATEGORIES = [
 export default function RegisterClientScreen({ navigation }: Props) {
   const [page, setPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
+  const [titlePosition, setTitlePosition] = useState(55);
 
   // Formulario
   const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -44,6 +45,11 @@ export default function RegisterClientScreen({ navigation }: Props) {
   // Paso 3
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
+  const handleTitleLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setTitlePosition(y);
+  };
+
   // Lógica de Categorías
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
@@ -56,8 +62,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
   // Lógica del Botón Principal
   const isLastPage = page === 2;
   
-  
-  // Validaciones (mejoras pronto)
+  // Validaciones
   const isStep1Valid = name.length > 2 && email.includes('@') && phone.length > 7;
   const isStep2Valid = password.length > 5 && password === confirmPassword;
   const isStep3Valid = selectedCategories.length > 0 && selectedCategories.length <= 5;
@@ -67,59 +72,39 @@ export default function RegisterClientScreen({ navigation }: Props) {
   if (page === 1) isButtonDisabled = !isStep2Valid;
   if (page === 2) isButtonDisabled = !isStep3Valid;
 
-  // Lógica de Imagen (Ejemplo)
+  // Lógica de Imagen
   const pickImage = async () => {
-    // Pedir permisos (necesario en iOS)
-    // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    // if (status !== 'granted') {
-    //   Alert.alert('Permiso necesario', 'Necesitas dar permisos para acceder a las fotos.');
-    //   return;
-    // }
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [1, 1],
-    //   quality: 1,
-    // });
-    // if (!result.cancelled) {
-    //   setProfilePic(result.uri);
-    // }
+    // Implementar expo-image-picker aquí
   };
 
   const handleButtonPress = () => {
     if (isLastPage) {
-      // Lógica de Registro Final
       const formData = { name, email, phone, password, selectedCategories };
       console.log('Enviando al backend:', formData);
       Alert.alert('¡Registro Exitoso!', 'Tu cuenta ha sido creada.');
-      // Aquí se navega a la app principal
-      // navigation.navigate('AppHome');
     } else {
-      // Avanza a la siguiente página
       pagerRef.current?.setPage(page + 1);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <WaveHeader />
-      {/* Botón de Atrás (Posicionado Absolutamente) */}
+      <WaveHeader targetY={titlePosition} />
       <TouchableOpacity onPress={() => navigation.navigate('RegisterType')} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} onLayout={handleTitleLayout}>
         <Text style={styles.title}>Registro Cliente</Text>
       </View>
 
-      {/* El Círculo de la Foto de Perfil (Fijo) */}
       <TouchableOpacity style={styles.profilePicContainer} onPress={pickImage}>
         {profilePic ? (
           <Image source={{ uri: profilePic }} style={styles.profilePic} />
         ) : (
           <Feather name="plus" size={40} color={COLORS.textSecondary} />
         )}
-        </TouchableOpacity>
+      </TouchableOpacity>
       <Text style={styles.profilePicText}>Foto de perfil</Text>
 
       <PagerView
@@ -127,7 +112,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
         initialPage={0}
         ref={pagerRef}
         onPageSelected={(e) => setPage(e.nativeEvent.position)}
-        scrollEnabled={false} // El usuario no puede deslizar
+        scrollEnabled={false}
       >
         {/* Página 1: Datos Personales */}
         <View key="1" style={styles.page}>
@@ -156,15 +141,13 @@ export default function RegisterClientScreen({ navigation }: Props) {
           </View>
         </View>
       </PagerView>
-      {/* Botón Siguiente/Registrarse */}
+
       <View style={styles.bottomContainer}>
         <PaginationDots count={3} activeIndex={page} />
         <CustomButton
           title={isLastPage ? "Registrarse" : "Siguiente"}
           onPress={handleButtonPress}
           mode="solid"
-          // Se necesita añadir 'disabled' al componente CustomButton
-          // disabled={isButtonDisabled} 
         />
         <View style={styles.footerContainer}>
           <Text style={styles.loginLink}> ¿Ya tienes una cuenta? </Text>
@@ -231,10 +214,10 @@ const styles = StyleSheet.create({
     paddingTop: 0 
   },
   footerContainer: {
-    flexDirection: 'row', // Esto los pone uno al lado del otro
-    justifyContent: 'center', // Centra el grupo
-    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
-    marginTop: 16, // El margen que tenías en el loginLink
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   loginLink: { 
     fontSize: 16,
@@ -249,8 +232,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontWeight: 'bold'
   },
-
-  // Estilos para Página 3
   categoryTitle: { 
     fontSize: 20, 
     fontWeight: '600', 

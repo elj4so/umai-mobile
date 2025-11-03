@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -17,19 +17,32 @@ type Props = {
 };
 
 export default function StartupScreen2({ navigation }: Props) {
+  const [umaiPosition, setUmaiPosition] = useState(55);
+
+  const handleUmaiLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setUmaiPosition(y);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <WaveHeader />
+      <WaveHeader targetY={umaiPosition} />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>UMAI</Text>
-        {/* Botón Iniciar sesión */}
+        <View style={styles.titleContainer}>
+          <Text 
+            style={styles.title}
+            onLayout={handleUmaiLayout}
+          >
+            UMAI
+          </Text>
+        </View>
+        {/* Botones */}
         <View style={styles.buttonContainer}>
           <CustomButton
             title="Iniciar sesión"
             mode="solid"
             onPress={() => navigation.navigate('Login')}
           />
-          {/* Botón Registrarse*/}
           <CustomButton
             title="Registrarse"
             mode="outlined"
@@ -40,6 +53,7 @@ export default function StartupScreen2({ navigation }: Props) {
     </SafeAreaView>
   );
 }
+
 // Estilos
 const styles = StyleSheet.create({
   safeArea: {
@@ -48,17 +62,23 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center', // Centra el contenido verticalmente
+    justifyContent: 'space-between',
     padding: 24,
+    paddingBottom: 40,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 56,
     fontWeight: 'bold',
     color: COLORS.black,
     textAlign: 'center',
-    marginBottom: 60, // Espacio entre el título y los botones
   },
   buttonContainer: {
     width: '100%',
+    gap: 16,
   },
 });

@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import PagerView from 'react-native-pager-view';
 import { Feather } from '@expo/vector-icons';
-// import * as ImagePicker from 'expo-image-picker'; // expo install expo-image-picker
 
 // Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
@@ -24,6 +23,7 @@ type Props = {
 export default function RegisterRestaurantScreen({ navigation }: Props) {
   const [page, setPage] = useState(0);
   const pagerRef = useRef<PagerView>(null);
+  const [titlePosition, setTitlePosition] = useState(55);
 
   // Formulario
   const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -37,56 +37,41 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
   const [address, setAddress] = useState('');
   // Paso 3
   const [deliveryFormat, setDeliveryFormat] = useState('');
-  // Paso 4 ("Categorías" o "Menú")
+
+  const handleTitleLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setTitlePosition(y);
+  };
 
   // Lógica de Botón
-  const isLastPage = page === 3; // 4 páginas (0, 1, 2, 3)
-  
-  // (Aquí iría la lógica de validación por paso)
-  
+  const isLastPage = page === 3;
+
   const handleButtonPress = () => {
     if (isLastPage) {
       const formData = { name, email, phone, password, address, deliveryFormat, profilePic };
       console.log('Enviando al backend:', formData);
       Alert.alert('¡Registro Exitoso!', 'Tu restaurante ha sido registrado.');
-      // navigation.navigate('AppHome');
     } else {
       pagerRef.current?.setPage(page + 1);
     }
   };
 
-  // Lógica de Imagen (Ejemplo)
+  // Lógica de Imagen
   const pickImage = async () => {
-    // Pedir permisos (necesario en iOS)
-    // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    // if (status !== 'granted') {
-    //   Alert.alert('Permiso necesario', 'Necesitas dar permisos para acceder a las fotos.');
-    //   return;
-    // }
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [1, 1],
-    //   quality: 1,
-    // });
-    // if (!result.cancelled) {
-    //   setProfilePic(result.uri);
-    // }
+    // Implementar expo-image-picker aquí
   };
-
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <WaveHeader />
+      <WaveHeader targetY={titlePosition} />
       <TouchableOpacity onPress={() => navigation.navigate('RegisterType')} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       
-      <View style={styles.titleContainer}>
+      <View style={styles.titleContainer} onLayout={handleTitleLayout}>
         <Text style={styles.title}>Registro Restaurante</Text>
       </View>
       
-      {/* El Círculo de la Foto de Perfil (Fijo) */}
       <TouchableOpacity style={styles.profilePicContainer} onPress={pickImage}>
         {profilePic ? (
           <Image source={{ uri: profilePic }} style={styles.profilePic} />
@@ -119,20 +104,19 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
         <View key="3" style={styles.page}>
           <CustomInput iconName="truck" placeholder="Formato de delivery (ej. 'Propio', 'Rappi')" value={deliveryFormat} onChangeText={setDeliveryFormat} />
         </View> 
-        {/* Página 4: (Asumida) */}
+        {/* Página 4: Paso final */}
         <View key="4" style={styles.page}>
           <Text style={styles.categoryTitle}>Paso final</Text>
           <Text style={styles.categorySubtitle}>Aquí irían más campos (ej. categorías, menú)</Text>
         </View>
       </PagerView>
-      {/* Botón Siguiente/Registrarse */}
+
       <View style={styles.bottomContainer}>
         <PaginationDots count={4} activeIndex={page} />
         <CustomButton
           title={isLastPage ? "Registrarse" : "Siguiente"}
           onPress={handleButtonPress}
           mode="solid"
-          // disabled={...}
         />
         <View style={styles.footerContainer}>
           <Text style={styles.loginLink}> ¿Ya tienes una cuenta? </Text>
@@ -144,7 +128,7 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
     </SafeAreaView>
   );
 }
-// Estilos
+
 const styles = StyleSheet.create({
   safeArea: { 
     flex: 1, 
@@ -200,10 +184,10 @@ const styles = StyleSheet.create({
     paddingTop: 0 
   },
   footerContainer: {
-    flexDirection: 'row', // Esto los pone uno al lado del otro
-    justifyContent: 'center', // Centra el grupo
-    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
-    marginTop: 16, // El margen que tenías en el loginLink
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   loginLink: { 
     fontSize: 16,

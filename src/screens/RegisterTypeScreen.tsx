@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -18,26 +18,36 @@ type Props = {
 };
 
 export default function RegisterTypeScreen({ navigation }: Props) {
+  const [umaiPosition, setUmaiPosition] = useState(55);
+
+  const handleUmaiLayout = (event: any) => {
+    const { y } = event.nativeEvent.layout;
+    setUmaiPosition(y);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* TODO: Actualizar WaveHeader para que acepte un botón de "atrás" */}
-      <WaveHeader />
+      <WaveHeader targetY={umaiPosition} />
       <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       <View style={styles.contentContainer}>
-        <View>
-          <Text style={styles.title}>UMAI</Text>
+        <View style={styles.titleContainer}>
+          <Text 
+            style={styles.title}
+            onLayout={handleUmaiLayout}
+          >
+            UMAI
+          </Text>
           <Text style={styles.subtitle}>Registro</Text>
         </View>
-        {/* Botón Cliente */}
+        {/* Botones */}
         <View style={styles.buttonContainer}>
           <CustomButton
             title="Cliente"
             mode="solid"
             onPress={() => navigation.navigate('RegisterClient')}
           />
-          {/* Botón Restaurante */}
           <CustomButton
             title="Restaurante"
             mode="outlined"
@@ -54,7 +64,7 @@ export default function RegisterTypeScreen({ navigation }: Props) {
     </SafeAreaView>
   );
 }
-// Estilos
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -68,8 +78,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center', // Separa títulos, botones y link
+    justifyContent: 'space-between',
     padding: 24,
+    paddingBottom: 40,
+  },
+  titleContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 56,
@@ -83,16 +99,16 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     textAlign: 'center',
     marginTop: 8,
-    marginBottom: 60
   },
   buttonContainer: {
     width: '100%',
+    gap: 16,
   },
   footerContainer: {
-    flexDirection: 'row', // Esto los pone uno al lado del otro
-    justifyContent: 'center', // Centra el grupo
-    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
-    marginTop: 16, // El margen que tenías en el loginLink
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   loginLink: { 
     fontSize: 16,

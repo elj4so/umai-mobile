@@ -1,29 +1,42 @@
-import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../constants/colors';
 
-const { width } = Dimensions.get('window');
+interface WaveHeaderProps {
+  targetY?: number;
+}
 
-export default function WaveHeader() {
+export default function WaveHeader({ targetY = 55 }: WaveHeaderProps) {
+  const animatedHeight = useRef(new Animated.Value(250)).current;
+  const headerHeight = targetY > 0 ? targetY + 100 : 250;
+
+  useEffect(() => {
+    Animated.spring(animatedHeight, {
+      toValue: headerHeight,
+      useNativeDriver: false,
+      tension: 50,
+      friction: 7,
+    }).start();
+  }, [headerHeight]);
+
   return (
-    <View style={styles.container}>
-      {/* Fondo sólido del header */}
-      <View style={styles.headerBackground} />
+    <Animated.View style={[styles.container, { height: animatedHeight }]}>
+      <View style={styles.solidBackground} />
       
-      {/* SVG con la onda */}
       <Svg
-        height="60%"
+        height="200"
         width="100%"
         viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
         style={styles.wave}
       >
         <Path
-          fill={COLORS.primary}
-          d="M0,32L80,53.3C160,75,320,117,480,112C640,107,800,53,960,53.3C1120,53,1280,107,1360,133.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
+          fill={COLORS.white}
+          d="M0,96L60,112C120,128,240,160,360,165.3C480,171,600,149,720,144C840,139,960,149,1080,165.3C1200,181,1320,203,1380,213.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
         />
       </Svg>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -33,17 +46,23 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 200,
+    width: '100%',
     overflow: 'hidden',
     zIndex: 0,
   },
-  headerBackground: {
+  solidBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: COLORS.primary,
-    height: 76, // Altura del fondo sólido
-    width: '100%',
   },
   wave: {
     position: 'absolute',
-    top: 55, // Ajusta esto para mover la onda arriba/abajo
+    bottom: -2,
+    left: 0,
+    right: 0,
+    width: '100%',
   },
 });
