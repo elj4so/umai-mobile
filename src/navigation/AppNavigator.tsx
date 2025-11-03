@@ -9,7 +9,6 @@ import RegisterTypeScreen from '../screens/RegisterTypeScreen';
 import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
 
-
 // Parámetros para cada ruta
 export type AuthStackParamList = {
   Startup1: undefined;
@@ -26,9 +25,29 @@ export const AppNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false, // Ocultamos el header por defecto
+        headerShown: false,
+        // Transición suave pero rápida
+        cardStyleInterpolator: ({ current }) => ({
+          cardStyle: {
+            opacity: current.progress,
+          },
+        }),
+        transitionSpec: {
+          open: {
+            animation: 'timing',
+            config: {
+              duration: 350, // Balance perfecto: no es instantáneo ni lento
+            },
+          },
+          close: {
+            animation: 'timing',
+            config: {
+              duration: 350,
+            },
+          },
+        },
       }}
-      initialRouteName="Startup1" // La primera pantalla que se muestra
+      initialRouteName="Startup1"
     >
       <Stack.Screen name="Startup1" component={StartupScreen1} />
       <Stack.Screen name="Startup2" component={StartupScreen2} />

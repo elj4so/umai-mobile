@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { COLORS } from '../constants/colors';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface WaveHeaderProps {
   targetY?: number;
@@ -9,14 +11,16 @@ interface WaveHeaderProps {
 
 export default function WaveHeader({ targetY = 55 }: WaveHeaderProps) {
   const animatedHeight = useRef(new Animated.Value(250)).current;
+  
+  // Calcula la altura objetivo basándose en la posición de UMAI
   const headerHeight = targetY > 0 ? targetY + 100 : 250;
 
   useEffect(() => {
-    Animated.spring(animatedHeight, {
+    // Animación más lenta y suave
+    Animated.timing(animatedHeight, {
       toValue: headerHeight,
+      duration: 900, // Más lento (antes era 600)
       useNativeDriver: false,
-      tension: 50,
-      friction: 7,
     }).start();
   }, [headerHeight]);
 
@@ -25,15 +29,20 @@ export default function WaveHeader({ targetY = 55 }: WaveHeaderProps) {
       <View style={styles.solidBackground} />
       
       <Svg
-        height="200"
-        width="100%"
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
+        height="350"
+        width={SCREEN_WIDTH}
         style={styles.wave}
       >
         <Path
+          d={`
+            M 0 130
+            C ${SCREEN_WIDTH * 0.3} 200, ${SCREEN_WIDTH * 0.6} 70, ${SCREEN_WIDTH * 0.8} 250
+            S ${SCREEN_WIDTH * 1.3} 200, ${SCREEN_WIDTH} 180
+            L ${SCREEN_WIDTH} 350
+            L 0 350
+            Z
+          `}
           fill={COLORS.white}
-          d="M0,96L60,112C120,128,240,160,360,165.3C480,171,600,149,720,144C840,139,960,149,1080,165.3C1200,181,1320,203,1380,213.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
         />
       </Svg>
     </Animated.View>
@@ -63,6 +72,5 @@ const styles = StyleSheet.create({
     bottom: -2,
     left: 0,
     right: 0,
-    width: '100%',
   },
 });
