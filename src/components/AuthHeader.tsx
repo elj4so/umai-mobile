@@ -17,9 +17,9 @@ const { width } = Dimensions.get('window');
 export default function AuthHeader() {
  ;return (
    <View style={styles.header}>
-           <Svg height="350" width={width} style={styles.headerSvg}>
+           <Svg height="200" width={width} style={styles.headerSvg}>
              {/* Fondo coral */}
-             <Rect x="0" y="0" width={width} height="1080" fill="#FF7B7B" />
+             <Rect x="0" y="0" width={width} height="200" fill="#FF7B7B" />
    
              {/* Formas decorativas */}
              <Circle cx="30" cy="30" r="15" stroke="white" strokeWidth="2" fill="none" opacity="0.3" />
@@ -38,23 +38,20 @@ export default function AuthHeader() {
              {/* Formas geométricas adicionales */}
              <Rect x={width - 150} y="120" width="20" height="20" stroke="white" strokeWidth="2" fill="none" opacity="0.3" rotation="45" />
              <Circle cx="100" cy="150" r="10" fill="white" opacity="0.3" />
-{/* Ola blanca que empieza bajando, luego sube y vuelve a bajar */}
+   
+            {/* Ola blanca en la parte inferior con tres curvas */}
 <Path
   d={`
-    M 0 130
-    C ${width * 0.3} 200, ${width * 0.7} 70, ${width * 0.85} 250
-    S ${width * 1.3} 200, ${width} 180
-    L ${width} 350
-    L 0 350
+    M 0 180
+    Q ${width * 0.20} 150, ${width * 0.4} 170
+    T ${width * 0.7} 160
+    T ${width} 180
+    L ${width} 200
+    L 0 200
     Z
   `}
   fill="white"
 />
-
-
-
-
-
            </Svg>
          </View>
   );
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    height: "auto",
+    height: 150,
     position: 'relative',
   },
   headerSvg: {
@@ -89,6 +86,21 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 30,
     paddingTop: 40,
+  },
+  logo: {
+    fontSize: 56,
+    fontWeight: '900',
+    textAlign: 'center',
+    color: '#000',
+    letterSpacing: 8,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#000',
+    marginBottom: 40,
   },
   inputContainer: {
     marginBottom: 24,
@@ -136,5 +148,25 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginTop: 40,
     marginBottom: 20,
+  },
+  registerButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  loginTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginText: {
+    fontSize: 15,
+    color: '#000',
+  },
+  loginLink: {
+    fontSize: 15,
+    color: '#FF7B7B',
+    fontWeight: '600',
   },
 });

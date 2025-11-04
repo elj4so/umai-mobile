@@ -18,7 +18,8 @@ type Props = {
 
 export default function StartupScreen1({ navigation }: Props) {
   return (
-    <SafeAreaView style={styles.safeArea}>
+   <>
+   <SafeAreaView style={styles.safeArea}>
       <WaveHeader />
       <View style={styles.contentContainer}>
         <View>
@@ -33,6 +34,7 @@ export default function StartupScreen1({ navigation }: Props) {
         />
       </View>
     </SafeAreaView>
+    </> 
   );
 }
 
