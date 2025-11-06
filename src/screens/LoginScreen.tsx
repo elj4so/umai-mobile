@@ -62,7 +62,8 @@ export default function LoginScreen({ navigation }: Props) {
         <CustomButton
           title="Iniciar Sesión"
           mode="solid"
-          onPress={handleLogin}
+          onPress={() => navigation.navigate('VideoReel')}
+          
         />
         <View style={styles.footerContainer}>
           <Text style={styles.registerLink}> ¿Ya tienes una cuenta? </Text>

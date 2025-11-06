@@ -8,7 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterTypeScreen from '../screens/RegisterTypeScreen';
 import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
-
+import VideoReel from '../screens/FeedScreen';
 
 // Parámetros para cada ruta
 export type AuthStackParamList = {
@@ -36,6 +36,7 @@ export const AppNavigator = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
       <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
-    </Stack.Navigator>
+      <Stack.Screen name="VideoReel" component={VideoReel} />
+      </Stack.Navigator>
   );
 };
