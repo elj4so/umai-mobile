@@ -5,216 +5,115 @@ import { Search, Star, MessageSquare, ShoppingCart, Play, Pause } from 'lucide-r
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
-const ReelItem = ({ data, isPlaying, onTogglePause, isPaused }) => {
-    const player = useVideoPlayer(data.videoUrl, (player) => {
-        player.loop = true;
-        player.play();
-    });
+const ReelItem = ({ data, isPlaying, onTogglePause }) => {
+  const player = useVideoPlayer(data.videoUrl, (p) => {
+    p.loop = true;
+    p.play();
+  });
 
-    // Sincroniza el estado del video según el scroll y pausa
-    useEffect(() => {
-        if (isPlaying) {
-            if (isPaused) player.pause();
-            else player.play();
-        } else {
-            player.pause();
-        }
-    }, [isPlaying, isPaused]);
+  useEffect(() => {
+    if (isPlaying) player.play();
+    else player.pause();
+  }, [isPlaying]);
 
-    // --- Animación del botón ---
-    const fadeAnim = useRef(new Animated.Value(1)).current;
-    const [visible, setVisible] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [visible, setVisible] = useState(true);
 
-    const showButton = () => {
-        setVisible(true);
-        Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-        }).start();
+  const showButton = () => {
+    setVisible(true);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
 
-        // Oculta después de 2.5 segundos
-        setTimeout(() => {
-            Animated.timing(fadeAnim, {
-                toValue: 0,
-                duration: 500,
-                useNativeDriver: true,
-            }).start(() => setVisible(false));
-        }, 2500);
-    };
+    setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start(() => setVisible(false));
+    }, 2500);
+  };
 
-    useEffect(() => {
-        showButton();
-    }, [isPaused]);
+  useEffect(() => {
+    showButton();
+  }, [isPlaying]);
 
-    const handleTogglePause = () => {
-        onTogglePause();
-        showButton();
-    };
+  const handleTogglePause = () => {
+    onTogglePause();
+    showButton();
+  };
 
-    return (
-        <TouchableWithoutFeedback onPress={handleTogglePause}>
-            <View style={styles.container}>
-                {/* --- Video principal --- */}
-                <VideoView
-                    style={styles.video}
-                    player={player}
-                    allowsFullscreen={false}
-                    allowsPictureInPicture={false}
-                    contentFit="cover"
-                    nativeControls={false}
-                />
+  return (
+    <TouchableWithoutFeedback onPress={handleTogglePause}>
+      <View style={styles.container}>
+        <VideoView
+          style={styles.video}
+          player={player}
+          allowsFullscreen={false}
+          allowsPictureInPicture={false}
+          contentFit="cover"
+          nativeControls={false}
+        />
 
-                {/* Capa oscura */}
-                <View style={styles.overlay} />
+        <View style={styles.overlay} />
 
-                {/* Header */}
-                <View style={styles.header}>
-                    <Text style={styles.headerTitle}>UMAI</Text>
-                    <Search size={24} color="white" />
-                </View>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>UMAI</Text>
+          <Search size={24} color="white" />
+        </View>
 
-                {/* Botón central animado */}
-                {visible && (
-                    <Animated.View style={[styles.playButton, { opacity: fadeAnim }]}>
-                        {isPaused ? (
-                            <Play size={50} color="white" />
-                        ) : (
-                            <Pause size={50} color="white" />
-                        )}
-                    </Animated.View>
-                )}
+        {visible && (
+          <Animated.View style={[styles.playButton, { opacity: fadeAnim }]}>
+            {isPlaying ? <Pause size={50} color="white" /> : <Play size={50} color="white" />}
+          </Animated.View>
+        )}
 
-                {/* Iconos laterales */}
-                <View style={styles.rightControls}>
-                    <Star size={32} color="white" style={styles.iconMargin} fill="white" />
-                    <MessageSquare size={32} color="white" style={styles.iconMargin} />
-                </View>
+        <View style={styles.rightControls}>
+          <Star size={32} color="white" style={styles.iconMargin} fill="white" />
+          <MessageSquare size={32} color="white" style={styles.iconMargin} />
+        </View>
 
-                {/* Información inferior */}
-                <View style={styles.footer}>
-                    <View style={styles.mainOrderButton}>
-                        <Text style={styles.mainOrderText}>Pedir por</Text>
-                        <ShoppingCart size={20} color="white" />
-                    </View>
+        <View style={styles.footer}>
+          <View style={styles.mainOrderButton}>
+            <Text style={styles.mainOrderText}>Pedir por</Text>
+            <ShoppingCart size={20} color="white" />
+          </View>
 
-                    <View style={styles.foodServiceButtons}>
-                        {data.foodServiceOptions.map(service => (
-                            <View key={service.name} style={styles.serviceButton}>
-                                <Text style={[styles.serviceText, { color: service.color }]}>
-                                    {service.name}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
+          <View style={styles.foodServiceButtons}>
+            {data.foodServiceOptions.map((service) => (
+              <View key={service.name} style={styles.serviceButton}>
+                <Text style={[styles.serviceText, { color: service.color }]}>{service.name}</Text>
+              </View>
+            ))}
+          </View>
 
-                    <Text style={styles.usernameText}>{data.user}</Text>
-                    <Text style={styles.descriptionText}>{data.description}</Text>
-                </View>
-            </View>
-        </TouchableWithoutFeedback>
-    );
+          <Text style={styles.usernameText}>{data.user}</Text>
+          <Text style={styles.descriptionText}>{data.description}</Text>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        height: screenHeight,
-        width: screenWidth,
-        backgroundColor: 'black',
-        justifyContent: 'flex-end',
-    },
-    video: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.25)',
-    },
-    header: {
-        position: 'absolute',
-        top: 60,
-        left: 20,
-        right: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        zIndex: 10,
-    },
-    headerTitle: {
-        color: 'white',
-        fontSize: 30,
-        fontWeight: 'bold',
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
-    },
-    playButton: {
-        position: 'absolute',
-        alignSelf: 'center',
-        top: '45%',
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        borderRadius: 50,
-        padding: 15,
-        zIndex: 15,
-    },
-    rightControls: {
-        position: 'absolute',
-        right: 15,
-        bottom: screenHeight * 0.2,
-        alignItems: 'center',
-        zIndex: 5,
-    },
-    iconMargin: {
-        marginBottom: 25,
-    },
-    footer: {
-        paddingHorizontal: 15,
-        paddingBottom: 85,
-        zIndex: 5,
-    },
-    usernameText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginTop: 10,
-    },
-    descriptionText: {
-        color: 'white',
-        fontSize: 14,
-        marginTop: 5,
-        marginBottom: 10,
-    },
-    mainOrderButton: {
-        flexDirection: 'row',
-        backgroundColor: '#4CAF50',
-        borderRadius: 30,
-        paddingVertical: 8,
-        paddingHorizontal: 15,
-        alignSelf: 'flex-start',
-        marginBottom: 10,
-        alignItems: 'center',
-    },
-    mainOrderText: {
-        color: 'white',
-        fontWeight: 'bold',
-        marginRight: 5,
-        fontSize: 14,
-    },
-    foodServiceButtons: {
-        flexDirection: 'row',
-        marginBottom: 10,
-    },
-    serviceButton: {
-        backgroundColor: 'white',
-        borderRadius: 8,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        marginRight: 10,
-    },
-    serviceText: {
-        fontWeight: 'bold',
-        fontSize: 12,
-    },
+  container: { height: 850, width: screenWidth, backgroundColor: 'black', justifyContent: 'flex-end' },
+  video: { ...StyleSheet.absoluteFillObject },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.25)' },
+  header: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 },
+  headerTitle: { color: 'white', fontSize: 30, fontWeight: 'bold', textShadowColor: 'rgba(0,0,0,0.75)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 3 },
+  playButton: { position: 'absolute', alignSelf: 'center', top: '45%', backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 50, padding: 15, zIndex: 15 },
+  rightControls: { position: 'absolute', right: 15, bottom: screenHeight * 0.2, alignItems: 'center', zIndex: 5 },
+  iconMargin: { marginBottom: 25 },
+  footer: { paddingHorizontal: 15, paddingBottom: 0, zIndex: 5 },
+  usernameText: { color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 },
+  descriptionText: { color: 'white', fontSize: 14, marginTop: 5, marginBottom: 10 },
+  mainOrderButton: { flexDirection: 'row', backgroundColor: '#4CAF50', borderRadius: 30, paddingVertical: 8, paddingHorizontal: 15, alignSelf: 'flex-start', marginBottom: 10, alignItems: 'center' },
+  mainOrderText: { color: 'white', fontWeight: 'bold', marginRight: 5, fontSize: 14 },
+  foodServiceButtons: { flexDirection: 'row', marginBottom: 10 },
+  serviceButton: { backgroundColor: 'white', borderRadius: 8, paddingVertical: 5, paddingHorizontal: 10, marginRight: 10 },
+  serviceText: { fontWeight: 'bold', fontSize: 12 },
 });
 
 export default ReelItem;

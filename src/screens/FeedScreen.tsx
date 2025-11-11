@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { FlatList, Dimensions, StyleSheet, View, StatusBar } from 'react-native';
 import ReelItem from '../components/ReelItem';
-import MainTabNavigator from '../components/MainTabNavigator';
 
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -48,67 +47,69 @@ const FEED_DATA = [
 ];
 
 const FeedScreen = () => {
-    const [activeVideoId, setActiveVideoId] = useState(FEED_DATA[0].id);
-    const [isPaused, setIsPaused] = useState(false);
+  const [activeVideoId, setActiveVideoId] = useState(FEED_DATA[0].id);
+  const [pausedVideos, setPausedVideos] = useState<Record<string, boolean>>({});
 
-    const onViewableItemsChanged = useRef(({ viewableItems }) => {
-        if (viewableItems.length > 0) {
-            const newActiveId = viewableItems[0].item.id;
-            setActiveVideoId(newActiveId);
-            setIsPaused(false);
-        }
-    }).current;
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems.length > 0) {
+      const newActiveId = viewableItems[0].item.id;
+      setActiveVideoId(newActiveId);
+    }
+  }).current;
 
-    const viewabilityConfig = {
-        itemVisiblePercentThreshold: 50,
-    };
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 50,
+  };
 
-    const handleTogglePause = useCallback(() => {
-        setIsPaused(prev => !prev);
-    }, []);
+  const togglePause = (id: string) => {
+    setPausedVideos((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
-    const renderItem = useCallback(
-        ({ item }) => (
-            <View style={{ height: screenHeight, width: '100%' }}>
-                <ReelItem
-                    data={item}
-                    isPlaying={activeVideoId === item.id && !isPaused}
-                    isPaused={isPaused}
-                    onTogglePause={handleTogglePause}
-                />
-            </View>
-        ),
-        [activeVideoId, isPaused]
-    );
+  const renderItem = useCallback(
+    ({ item }) => (
+      <ReelItem
+        data={item}
+        isPlaying={activeVideoId === item.id && !pausedVideos[item.id]}
+        onTogglePause={() => togglePause(item.id)}
+      />
+    ),
+    [activeVideoId, pausedVideos]
+  );
 
-    return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-            <FlatList
-                data={FEED_DATA}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                pagingEnabled
-                decelerationRate="fast"
-                showsVerticalScrollIndicator={false}
-                getItemLayout={(data, index) => ({
-                    length: screenHeight,
-                    offset: screenHeight * index,
-                    index,
-                })}
-                onViewableItemsChanged={onViewableItemsChanged}
-                viewabilityConfig={viewabilityConfig}
-            />
-            {/* <MainTabNavigator/> */}
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <FlatList
+        data={FEED_DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        pagingEnabled
+        decelerationRate="fast"
+        showsVerticalScrollIndicator={false}
+        getItemLayout={(data, index) => ({
+          length: screenHeight,
+          offset: screenHeight * index,
+          index,
+        })}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        removeClippedSubviews
+        initialNumToRender={1}
+        maxToRenderPerBatch={2}
+        windowSize={3}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'black',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
 });
 
 export default FeedScreen;
