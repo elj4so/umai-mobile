@@ -62,7 +62,7 @@ export default function LoginScreen({ navigation }: Props) {
         <CustomButton
           title="Iniciar Sesión"
           mode="solid"
-          onPress={() => navigation.navigate('VideoReel')}
+          onPress={() => navigation.navigate('MainTabs')}
           
         />
         <View style={styles.footerContainer}>

@@ -1,139 +1,138 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-// ⚠️ NECESITAS INSTALAR ESTOS MÓDULOS ⚠️
- import { Video } from 'expo-av'; 
-import { Search, Star, MessageSquare, ShoppingCart, Play, Icon } from 'lucide-react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback, Animated } from 'react-native';
+import { VideoView, useVideoPlayer } from 'expo-video';
+import { Search, Star, MessageSquare, ShoppingCart, Play, Pause } from 'lucide-react-native';
 
-// Usamos el tamaño de la ventana para asegurar que ocupe toda la pantalla
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
-// Datos de ejemplo para la tarjeta (simulando que vienen de la FlatList)
-// const DUMMY_DATA = {
-//     videoUrl: 'TU_URL_DE_VIDEO_AQUÍ', // Reemplaza con una URL de video de prueba
-//     user: '@youkaybauldesensaciones',
-//     description: 'Prueba nuestras Bolas de Fuego con sus sabores auténticos, frescos y llenos de tradición.',
-//     foodServiceOptions: [
-//         { name: 'Uber Eats', color: 'green' },
-//         { name: 'DiDi Food', color: '#FF7D00' },
-//         { name: 'Rappi', color: '#FF4A50' },
-//     ]
-// };
+const ReelItem = ({ data, isPlaying, onTogglePause, isPaused }) => {
+    const player = useVideoPlayer(data.videoUrl, (player) => {
+        player.loop = true;
+        player.play();
+    });
 
-const ReelItem = ({ data = DUMMY_DATA, isPlaying }) => {
-    // Componente Video (comentado, ya que necesita expo-av/expo-video)
-    const VideoComponent = () => (
-        <View style={styles.videoPlaceholder}>
-            <Video
-                source={{ uri: data.videoUrl }}
-                style={styles.video}
-                resizeMode="cover"
-                isLooping={true}
-                shouldPlay={isPlaying} // Reproducir si está activo
-                useNativeControls={false}
-            />
-           
-            {/* Imagen de referencia (el sushi) y el botón de Play */}
-            {/* <Text style={styles.placeholderText}>[Imagen o Video de Sushi]</Text> */}
-            <Play size={24} color={"white"}>
-                
-            </Play>
-        </View>
-    );
+    // Sincroniza el estado del video según el scroll y pausa
+    useEffect(() => {
+        if (isPlaying) {
+            if (isPaused) player.pause();
+            else player.play();
+        } else {
+            player.pause();
+        }
+    }, [isPlaying, isPaused]);
+
+    // --- Animación del botón ---
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+    const [visible, setVisible] = useState(true);
+
+    const showButton = () => {
+        setVisible(true);
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+
+        // Oculta después de 2.5 segundos
+        setTimeout(() => {
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 500,
+                useNativeDriver: true,
+            }).start(() => setVisible(false));
+        }, 2500);
+    };
+
+    useEffect(() => {
+        showButton();
+    }, [isPaused]);
+
+    const handleTogglePause = () => {
+        onTogglePause();
+        showButton();
+    };
 
     return (
-        <View style={styles.container}>
-            {/* 1. Área del Video (Fondo) */}
-            <VideoComponent />
-            
-            {/* 2. Capa de Superposición Oscura (para mejorar contraste del texto) */}
-            <View style={styles.overlay} />
+        <TouchableWithoutFeedback onPress={handleTogglePause}>
+            <View style={styles.container}>
+                {/* --- Video principal --- */}
+                <VideoView
+                    style={styles.video}
+                    player={player}
+                    allowsFullscreen={false}
+                    allowsPictureInPicture={false}
+                    contentFit="cover"
+                    nativeControls={false}
+                />
 
-            {/* 3. Controles Superiores */}
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>UMAI</Text>
-                <Search size={24} color="white"/>
-            </View>
+                {/* Capa oscura */}
+                <View style={styles.overlay} />
 
-            {/* {foto de perfil por hacer} */}
-            <View>
-
-                
-            </View>
-
-            {/* 5. Iconos de Interacción (Derecha) */}
-            <View style={styles.rightControls}>
-                <Star size={32} color="white" style={styles.iconMargin} fill="white" />
-                <MessageSquare size={32} color="white" style={styles.iconMargin} />
-            </View>
-
-            {/* 6. Información Inferior y Botones de Pedido (Abajo Izquierda) */}
-            <View style={styles.footer}>
-                {/* Botón Principal de Pedido */}
-                <TouchableOpacity style={styles.mainOrderButton}>
-                    <Text style={styles.mainOrderText}>Pedir por</Text>
-                    <ShoppingCart size={20} color="white" />
-                </TouchableOpacity>
-
-                {/* Botones de Servicios de Comida */}
-                <View style={styles.foodServiceButtons}>
-                    {data.foodServiceOptions.map(service => (
-                        <View key={service.name} style={styles.serviceButton}>
-                            <TouchableOpacity>
-                            <Text style={[styles.serviceText, { color: service.color }]}>{service.name}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        
-                    ))}
+                {/* Header */}
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>UMAI</Text>
+                    <Search size={24} color="white" />
                 </View>
-                
-                {/* Texto del Usuario y Descripción */}
-                <Text style={styles.usernameText}>{data.user}</Text>
-                <Text style={styles.descriptionText}>{data.description}</Text>
-            </View>
 
-        </View>
+                {/* Botón central animado */}
+                {visible && (
+                    <Animated.View style={[styles.playButton, { opacity: fadeAnim }]}>
+                        {isPaused ? (
+                            <Play size={50} color="white" />
+                        ) : (
+                            <Pause size={50} color="white" />
+                        )}
+                    </Animated.View>
+                )}
+
+                {/* Iconos laterales */}
+                <View style={styles.rightControls}>
+                    <Star size={32} color="white" style={styles.iconMargin} fill="white" />
+                    <MessageSquare size={32} color="white" style={styles.iconMargin} />
+                </View>
+
+                {/* Información inferior */}
+                <View style={styles.footer}>
+                    <View style={styles.mainOrderButton}>
+                        <Text style={styles.mainOrderText}>Pedir por</Text>
+                        <ShoppingCart size={20} color="white" />
+                    </View>
+
+                    <View style={styles.foodServiceButtons}>
+                        {data.foodServiceOptions.map(service => (
+                            <View key={service.name} style={styles.serviceButton}>
+                                <Text style={[styles.serviceText, { color: service.color }]}>
+                                    {service.name}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+
+                    <Text style={styles.usernameText}>{data.user}</Text>
+                    <Text style={styles.descriptionText}>{data.description}</Text>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        height: screenHeight, // Ocupa toda la altura
-        width: screenWidth,   // Ocupa todo el ancho
+        height: screenHeight,
+        width: screenWidth,
         backgroundColor: 'black',
         justifyContent: 'flex-end',
-    },
-    // --- Video ---
-    videoPlaceholder: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#333', // Simula el fondo del video
     },
     video: {
         ...StyleSheet.absoluteFillObject,
     },
-    placeholderText: {
-        color: 'white',
-        fontSize: 16,
-    },
-    playButton: {
-        position: 'absolute',
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: 'rgba(255, 255, 255, 1)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    // --- Capas Superpuestas ---
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)', // Ligero oscurecimiento para mejor contraste
+        backgroundColor: 'rgba(0, 0, 0, 0.25)',
     },
-    // --- Header (UMAI) ---
     header: {
         position: 'absolute',
-        top: 60, // Ajusta según la barra de estado de iOS/Android
+        top: 60,
         left: 20,
         right: 20,
         flexDirection: 'row',
@@ -149,36 +148,28 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 3,
     },
-    // --- Indicadores de Progreso ---
-    progressContainer: {
+    playButton: {
         position: 'absolute',
-        top: screenHeight * 0.2, // Posición vertical
-        width: '100%',
-        zIndex: 5,
+        alignSelf: 'center',
+        top: '45%',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        borderRadius: 50,
+        padding: 15,
+        zIndex: 15,
     },
-    progressCircle: {
-        position: 'absolute',
-        width: 15,
-        height: 15,
-        borderRadius: 7.5,
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
-        opacity: 0.6,
-    },
-    // --- Iconos de Interacción (Derecha) ---
     rightControls: {
         position: 'absolute',
         right: 15,
-        bottom: screenHeight * 0.2, // Encima del footer
+        bottom: screenHeight * 0.2,
         alignItems: 'center',
         zIndex: 5,
     },
     iconMargin: {
         marginBottom: 25,
     },
-    // --- Footer (Información y Botones) ---
     footer: {
         paddingHorizontal: 15,
-        paddingBottom: 60, // Espacio para la barra de navegación inferior
+        paddingBottom: 85,
         zIndex: 5,
     },
     usernameText: {
@@ -195,11 +186,11 @@ const styles = StyleSheet.create({
     },
     mainOrderButton: {
         flexDirection: 'row',
-        backgroundColor: '#4CAF50', // Verde similar al de la imagen
+        backgroundColor: '#4CAF50',
         borderRadius: 30,
         paddingVertical: 8,
         paddingHorizontal: 15,
-        alignSelf: 'flex-start', // Solo ocupa el ancho necesario
+        alignSelf: 'flex-start',
         marginBottom: 10,
         alignItems: 'center',
     },
@@ -224,27 +215,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 12,
     },
-    // --- Barra de Navegación Inferior ---
-    bottomNav: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: 10,
-        backgroundColor: 'white', // Fondo blanco como en la imagen
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
-        zIndex: 10,
-    },
-    navText: {
-        color: '#888',
-        fontWeight: '600',
-    },
-    navActive: {
-        color: '#FF0033', // Color rojo para la pestaña activa 'Inicio'
-        // Puedes añadir un icono para el botón central si lo deseas
-    }
 });
 
 export default ReelItem;
