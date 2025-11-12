@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'; 
 import { useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -12,8 +12,9 @@ import { COLORS } from '../constants/colors';
 import WaveHeader from '../components/WaveHeader';
 import CustomButton from '../components/CustomButton';
 import CustomInput from '../components/CustomInput';
+// Servicio de autenticación
+import authService from '../services/authService';
 
-// Props de Navegación
 type Props = {
   navigation: StackNavigationProp<AuthStackParamList, 'Login'>;
 };
@@ -21,54 +22,106 @@ type Props = {
 export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Lógica Iniciar Sesión
-  const handleLogin = () => {
-    console.log({ email, password });
+  const handleLogin = async () => {
+    // Validaciones básicas
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    if (!email.includes('@')) {
+      Alert.alert('Error', 'Por favor ingresa un email válido');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await authService.login(email, password);
+      
+      console.log('✅ Login exitoso:', response);
+      
+      Alert.alert(
+        '¡Bienvenido!',
+        `Hola ${response.data?.user?.name || 'Usuario'}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('MainTabs'),
+          },
+        ]
+      );
+    } catch (error: any) {
+      console.error('❌ Error en login:', error);
+      Alert.alert(
+        'Error al iniciar sesión',
+        error.message || 'Ocurrió un error. Intenta de nuevo.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <WaveHeader />
-      <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
+      <TouchableOpacity 
+        onPress={() => navigation.navigate('Startup2')} 
+        style={styles.backButton}
+        disabled={loading}
+      >
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
+      
       <View style={styles.contentContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>UMAI</Text>
           <Text style={styles.subtitle}>Iniciar Sesión</Text>
         </View>
+        
         <View style={styles.inputContainer}>
-          {/* 1. Input: Correo Electrónico */}
           <CustomInput
             iconName="mail"
             placeholder="Correo Electrónico"
             value={email}
             onChangeText={setEmail}
+            editable={!loading}
           />
-          {/* 2. Input: Contraseña */}
+          
           <CustomInput
             iconName="lock"
             placeholder="Contraseña"
             value={password}
             onChangeText={setPassword}
             isPassword={true}
+            editable={!loading}
           />
         </View>
-        
       </View>
-         {/* Botón Iniciar Sesión */}
+      
       <View style={styles.bottomContainer}>
-        <CustomButton
-          title="Iniciar Sesión"
-          mode="solid"
-          onPress={() => navigation.navigate('Main' as any)}
-          
-        />
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.loadingText}>Iniciando sesión...</Text>
+          </View>
+        ) : (
+          <CustomButton
+            title="Iniciar Sesión"
+            mode="solid"
+            onPress={handleLogin}
+          />
+        )}
+        
         <View style={styles.footerContainer}>
-          <Text style={styles.registerLink}> ¿Ya tienes una cuenta? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('RegisterType')}>
-            <Text style={styles.registerLinkBold}> Registrarse </Text>
+          <Text style={styles.registerLink}>¿No tienes una cuenta?</Text>
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('RegisterType')}
+            disabled={loading}
+          >
+            <Text style={styles.registerLinkBold}> Registrarse</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -89,7 +142,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-between', // Separa títulos, botones y link
+    justifyContent: 'space-between',
     padding: 24,
     paddingBottom: 40,
   },
@@ -110,7 +163,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8,
   },
-  inputContainer:{
+  inputContainer: {
     alignItems: 'center',
     marginBottom: 80
   },
@@ -118,11 +171,20 @@ const styles = StyleSheet.create({
     padding: 24, 
     paddingTop: 0 
   },
+  loadingContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 10,
+    color: COLORS.textSecondary,
+    fontSize: 16,
+  },
   footerContainer: {
-    flexDirection: 'row', // Esto los pone uno al lado del otro
-    justifyContent: 'center', // Centra el grupo
-    alignItems: 'center', // Alinea verticalmente (por si un texto es más grande)
-    marginTop: 16, // El margen que tenías en el loginLink
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
   },
   registerLink: { 
     fontSize: 16, 
