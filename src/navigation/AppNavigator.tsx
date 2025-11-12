@@ -1,6 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
+// TabNavigator
+import MainTabNavigator from './MainTabNavigator';
+
 // Pantallas
 import StartupScreen1 from '../screens/StartupScreen1';
 import StartupScreen2 from '../screens/StartupScreen2';
@@ -9,40 +12,59 @@ import RegisterTypeScreen from '../screens/RegisterTypeScreen';
 import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
 
-// Navegador de pestañas principal
-import MainTabNavigator from './MainTabNavigator';
-import FeedScreen from '../screens/FeedScreen';
 
+// Define los tipos para el Stack RAÍZ
+// Tendrá solo dos "rutas": el flujo Auth y el flujo Main
+export type RootStackParamList = {
+  Auth: undefined;
+  Main: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+// 4. Define los tipos SOLO para el flujo Auth
 export type AuthStackParamList = {
   Startup1: undefined;
   Startup2: undefined;
-  Login: undefined;
   RegisterType: undefined;
   RegisterClient: undefined;
   RegisterRestaurant: undefined;
-  MainTabs: undefined; // 👈 agregamos esta ruta
+  Login: undefined;
 };
 
-const Stack = createStackNavigator<AuthStackParamList>();
+const AuthStack = createStackNavigator<AuthStackParamList>();
+
+// 5. Un componente interno para el flujo de Autenticación
+const AuthFlowNavigator = () => {
+  return (
+    <AuthStack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Startup1"
+    >
+      <AuthStack.Screen name="Startup1" component={StartupScreen1} />
+      <AuthStack.Screen name="Startup2" component={StartupScreen2} />
+      <AuthStack.Screen name="RegisterType" component={RegisterTypeScreen} />
+      <AuthStack.Screen name="RegisterClient" component={RegisterClientScreen} />
+      <AuthStack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+    </AuthStack.Navigator>
+  );
+};
 
 export const AppNavigator = () => {
+  // Aquí ira lógica de si el usuario está logueado o no
+  // Por ahora, siempre empezamos en 'Auth'
+  const isUserLoggedIn = false; 
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Startup1"
+      initialRouteName={isUserLoggedIn ? "Main" : "Auth"}
     >
-      <Stack.Screen name="Startup1" component={StartupScreen1} />
-      <Stack.Screen name="Startup2" component={StartupScreen2} />
-      <Stack.Screen name="RegisterType" component={RegisterTypeScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="RegisterClient" component={RegisterClientScreen} />
-      <Stack.Screen name="RegisterRestaurant" component={RegisterRestaurantScreen} />
-      {/* 👇 Nueva pantalla con las pestañas */}
-      <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+      <Stack.Screen name="Auth" component={AuthFlowNavigator} />
+      <Stack.Screen name="Main" component={MainTabNavigator} />
     </Stack.Navigator>
   );
-  
 };
-

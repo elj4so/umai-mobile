@@ -52,11 +52,35 @@ export default function AuthHeader() {
 />
 
 
+      {/* Formas decorativas */}
+      <Circle cx="30" cy="60" r="15" stroke="white" strokeWidth="2" fill="none" opacity="0.3" />
+      <Circle cx="70" cy="70" r="8" fill="white" opacity="0.3" />
+      <Circle cx="50" cy="120" r="20" stroke="white" strokeWidth="2" fill="none" opacity="0.3" />
 
 
+      {/* Círculos adicionales */}
+      <Circle cx={width - 20} cy="190" r="25" stroke="white" strokeWidth="2" fill="none" opacity="0.3" />
+      <Circle cx={width - 50} cy="120" r="12" fill="white" opacity="0.3" />
+      <Circle cx={width - 120} cy="100" r="18" stroke="white" strokeWidth="2" fill="none" opacity="0.3" />
 
-           </Svg>
-         </View>
+      {/* Formas geométricas adicionales */}
+      <Rect x={width - 150} y="120" width="20" height="20" stroke="white" strokeWidth="2" fill="none" opacity="0.3" rotation="45" />
+      <Circle cx="100" cy="110" r="10" fill="white" opacity="0.3" />
+      
+      {/* Ola blanca que empieza bajando, luego sube y vuelve a bajar */}
+      <Path
+        d={`
+          M 0 130
+          C ${width * 0.3} 200, ${width * 0.7} 70, ${width * 0.85} 250
+          S ${width * 1.3} 200, ${width} 180
+          L ${width} 350
+          L 0 350
+          Z
+        `}
+        fill="white"
+      />
+    </Svg>
+  </View>
   );
 }
 

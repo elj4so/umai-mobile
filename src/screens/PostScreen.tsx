@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function PostScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Pantalla de Posteo</Text>
+      <Text style={styles.text}>Pantalla Post</Text>
     </View>
   );
 }
