@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback, Animated } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { Search, Star, MessageSquare, ShoppingCart, Play, Pause } from 'lucide-react-native';
+import { useIsFocused } from '@react-navigation/native'; // 👈 Importante
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -11,28 +12,25 @@ const ReelItem = ({ data, isPlaying, onTogglePause }) => {
     p.play();
   });
 
-  useEffect(() => {
-    if (isPlaying) player.play();
-    else player.pause();
-  }, [isPlaying]);
-
+  const isScreenFocused = useIsFocused(); // 👈 Detecta si la pantalla está activa
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const [visible, setVisible] = useState(true);
 
+  // 🔹 Controla reproducción al cambiar entre pantallas
+  useEffect(() => {
+    if (isScreenFocused && isPlaying) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isScreenFocused, isPlaying]);
+
   const showButton = () => {
     setVisible(true);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
 
     setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start(() => setVisible(false));
+      Animated.timing(fadeAnim, { toValue: 0, duration: 500, useNativeDriver: true }).start(() => setVisible(false));
     }, 2500);
   };
 
@@ -98,15 +96,15 @@ const ReelItem = ({ data, isPlaying, onTogglePause }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { height: 850, width: screenWidth, backgroundColor: 'black', justifyContent: 'flex-end' },
+  container: { height: screenHeight - 83, width: screenWidth, backgroundColor: 'black', justifyContent: 'flex-end' },
   video: { ...StyleSheet.absoluteFillObject },
   overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.25)' },
   header: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 },
-  headerTitle: { color: 'white', fontSize: 30, fontWeight: 'bold', textShadowColor: 'rgba(0,0,0,0.75)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 3 },
+  headerTitle: { color: 'white', fontSize: 30, fontWeight: 'bold' },
   playButton: { position: 'absolute', alignSelf: 'center', top: '45%', backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 50, padding: 15, zIndex: 15 },
   rightControls: { position: 'absolute', right: 15, bottom: screenHeight * 0.2, alignItems: 'center', zIndex: 5 },
   iconMargin: { marginBottom: 25 },
-  footer: { paddingHorizontal: 15, paddingBottom: 0, zIndex: 5 },
+  footer: { paddingHorizontal: 15, zIndex: 5 },
   usernameText: { color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 },
   descriptionText: { color: 'white', fontSize: 14, marginTop: 5, marginBottom: 10 },
   mainOrderButton: { flexDirection: 'row', backgroundColor: '#4CAF50', borderRadius: 30, paddingVertical: 8, paddingHorizontal: 15, alignSelf: 'flex-start', marginBottom: 10, alignItems: 'center' },
