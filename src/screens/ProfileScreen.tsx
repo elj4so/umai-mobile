@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { Star, Utensils, ChevronLeft } from 'lucide-react-native';
+import { Star, Utensils, Settings } from 'lucide-react-native'; // ⬅️ Agregar Settings
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // --- Dimensiones para el ancho de la miniatura (Grid) ---
 const { width: screenWidth } = Dimensions.get('window');
-const THUMBNAIL_SIZE = (screenWidth - 45) / 3; // 45 es el padding horizontal total (15*2) + margen entre elementos
+const THUMBNAIL_SIZE = (screenWidth - 45) / 3;
 
 // --- Datos de ejemplo ---
 const USER_PROFILE = {
@@ -49,21 +49,22 @@ const FollowedAccountCard = ({ account }) => {
 };
 
 // --- Pantalla principal ---
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation prop
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<'favorites' | 'restaurants'>('favorites');
 
   return (
     <View style={styles.container}>
-      {/* Header (Posicionado fuera del ScrollView para evitar que se mueva) */}
-      {/* <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-        <TouchableOpacity onPress={() => console.log('Go Back')}>
-          <ChevronLeft size={24} color="black" />
+      {/* Header con botón de configuración */}
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <Text style={styles.headerTitle}>Perfil</Text>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Config')}
+          style={styles.settingsButton}
+        >
+          <Settings size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Menu')}>
-          <Text style={styles.headerMenu}>...</Text>
-        </TouchableOpacity>
-      </View> */}
+      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* 1. Sección Superior del Perfil (Diseño horizontal) */}
@@ -89,7 +90,7 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* Botón de Perfil (Colocado debajo de la imagen y las estadísticas) */}
+        {/* Botón de Perfil */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.editButton}>
             <Text style={styles.editButtonText}>Editar perfil</Text>
@@ -137,27 +138,31 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
   header: {
-    position: 'absolute', // Fija el header sobre el scroll
-    top: 0,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    alignItems: 'center',
+    paddingHorizontal: 20,
     paddingBottom: 10,
     backgroundColor: 'white',
-    zIndex: 10, // Asegura que esté por encima del contenido
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
   },
-  headerMenu: { fontSize: 24, fontWeight: 'bold', color: 'black' },
-  scrollContent: { paddingTop: 40, paddingBottom: 40 }, // Aumenta el paddingTop para dejar espacio al header fijo
+  headerTitle: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    color: 'black' 
+  },
+  settingsButton: {
+    padding: 5,
+  },
+  scrollContent: { paddingBottom: 40 },
   
-  // --- SECCIÓN PERFIL (MODIFICADA) ---
   profileSection: {
-    flexDirection: 'row', // Horizontal
+    flexDirection: 'row',
     alignItems: 'flex-start',
     paddingHorizontal: 15,
     marginBottom: 15,
-    paddingTop:50
+    paddingTop: 20,
   },
   profileImage: {
     width: 110,
@@ -165,10 +170,10 @@ const styles = StyleSheet.create({
     borderRadius: 55,
     marginRight: 15,
     backgroundColor: '#ff4081',
-    marginLeft:5
+    marginLeft: 5,
   },
   statsWrapper: {
-    flex: 1, // Ocupa el espacio restante
+    flex: 1,
     marginTop: 5,
   },
   username: { 
@@ -181,29 +186,24 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     marginBottom: 10,
   },
-  statItem: { alignItems: 'center', paddingRight: 10, paddingLeft:10 },
-  statSeparator: { width: 1, height: '80%', backgroundColor: '#ccc', },
+  statItem: { alignItems: 'center', paddingRight: 10, paddingLeft: 10 },
+  statSeparator: { width: 1, height: '80%', backgroundColor: '#ccc' },
   statNumber: { fontSize: 18, fontWeight: 'bold' },
   statLabel: { fontSize: 12, color: '#666' },
-  bio: { fontSize: 14, color: '#333', lineHeight: 20, maxWidth: '90%' }, // Alineado a la izquierda
-  // --- FIN SECCIÓN PERFIL ---
+  bio: { fontSize: 14, color: '#333', lineHeight: 20, maxWidth: '90%' },
 
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start', // Alineado a la izquierda para empujar el botón
+    justifyContent: 'flex-start',
     paddingHorizontal: 10,
     marginBottom: 20,
-
   },
   editButton: { 
     backgroundColor: '#e0e0e0', 
-    borderRadius: 8, // Ligeramente más redondeado
+    borderRadius: 8,
     paddingVertical: 10, 
     paddingHorizontal: 30,
-    width:129
-    // Alineación para que quede debajo de la foto/stats
-    // marginLeft: 105, 
-    // 90 (ancho imagen) + 15 (marginRight)
+    width: 129,
   },
   editButtonText: { fontWeight: 'bold', color: 'black' },
   tabContainer: {
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   activeTab: { borderBottomWidth: 2, borderBottomColor: '#FF4A50' },
   contentContainer: { paddingHorizontal: 15, paddingTop: 10 },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  thumbnail: { width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE * 1.33, borderRadius: 10, marginBottom: 8 }, // Altura de miniatura de video
+  thumbnail: { width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE * 1.33, borderRadius: 10, marginBottom: 8 },
 });
 
 const accountStyles = StyleSheet.create({
