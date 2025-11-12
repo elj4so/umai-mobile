@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native';
 import FeedScreen from '../screens/FeedScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SavedScreen from '../screens/SavedScreen';
+import PostScreen from '../screens/PostScreen';
 
 const Tab = createBottomTabNavigator();
 const styles = StyleSheet.create({
@@ -35,15 +36,17 @@ export default function MainTabNavigator() {
           if (route.name === 'Feed') iconName = 'home';
           else if (route.name === 'Profile') iconName = 'user';
           else if (route.name === 'Saved') iconName = 'bookmark';
+          else if (route.name === 'Post') iconName = 'plus';
 
           return <Feather name={iconName} size={size} color={color} />;
         },
       })}
     >
-
+    <Tab.Screen name="Feed" component={FeedScreen} />
       <Tab.Screen name="Saved" component={SavedScreen} />
-      <Tab.Screen name="Feed" component={FeedScreen} />
+      <Tab.Screen name="Post" component={PostScreen}/>
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      
       
     </Tab.Navigator>
   );

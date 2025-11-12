@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList } from 'react-native';
-import { Star, Utensils, ChevronLeft, Navigation } from 'lucide-react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { Star, Utensils, ChevronLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AppNavigator';
+
+// --- Dimensiones para el ancho de la miniatura (Grid) ---
+const { width: screenWidth } = Dimensions.get('window');
+const THUMBNAIL_SIZE = (screenWidth - 45) / 3; // 45 es el padding horizontal total (15*2) + margen entre elementos
 
 // --- Datos de ejemplo ---
 const USER_PROFILE = {
   username: '@JoseTorresElReyDeAltoMando',
   followers: '200',
   favorites: '3',
-  bio: '¿Ya te sabes la nueva? Ve-rem, ve-rem, ve-rem, yo',
+  bio: '¿Ya te sabes la nueva?\nVe-rem, ve-rem, ve-rem, yo',
   profilePicUrl: 'https://via.placeholder.com/100',
 };
 
@@ -53,32 +55,48 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Perfil */}
+      {/* Header (Posicionado fuera del ScrollView para evitar que se mueva) */}
+      {/* <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <TouchableOpacity onPress={() => console.log('Go Back')}>
+          <ChevronLeft size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log('Menu')}>
+          <Text style={styles.headerMenu}>...</Text>
+        </TouchableOpacity>
+      </View> */}
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* 1. Sección Superior del Perfil (Diseño horizontal) */}
         <View style={styles.profileSection}>
           <Image source={{ uri: USER_PROFILE.profilePicUrl }} style={styles.profileImage} />
-          <Text style={styles.username}>{USER_PROFILE.username}</Text>
+          
+          <View style={styles.statsWrapper}>
+            <Text style={styles.username}>{USER_PROFILE.username}</Text>
 
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{USER_PROFILE.followers}</Text>
-              <Text style={styles.statLabel}>Siguiendo</Text>
+            <View style={styles.statsContainer}>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{USER_PROFILE.followers}</Text>
+                <Text style={styles.statLabel}>Siguiendo</Text>
+              </View>
+              <View style={styles.statSeparator} />
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{USER_PROFILE.favorites}</Text>
+                <Text style={styles.statLabel}>Videos Favoritos</Text>
+              </View>
             </View>
-            <View style={styles.statSeparator} />
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{USER_PROFILE.favorites}</Text>
-              <Text style={styles.statLabel}>Videos Favoritos</Text>
-            </View>
+
+            <Text style={styles.bio}>{USER_PROFILE.bio}</Text>
           </View>
+        </View>
 
-          <Text style={styles.bio}>{USER_PROFILE.bio}</Text>
-
+        {/* Botón de Perfil (Colocado debajo de la imagen y las estadísticas) */}
+        <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.editButton}>
             <Text style={styles.editButtonText}>Editar perfil</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Tabs */}
+        {/* 2. Tabs */}
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'favorites' && styles.activeTab]}
@@ -94,7 +112,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Contenido dinámico */}
+        {/* 3. Contenido dinámico */}
         <View style={styles.contentContainer}>
           {activeTab === 'favorites' ? (
             <View style={styles.gridContainer}>
@@ -117,33 +135,76 @@ const ProfileScreen = () => {
 
 // --- Estilos ---
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white'},
+  container: { flex: 1, backgroundColor: 'white' },
   header: {
+    position: 'absolute', // Fija el header sobre el scroll
+    top: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    backgroundColor: 'white',
+    zIndex: 10, // Asegura que esté por encima del contenido
   },
   headerMenu: { fontSize: 24, fontWeight: 'bold', color: 'black' },
-  scrollContent: { paddingBottom: 40 },
-  profileSection: { alignItems: 'center', paddingVertical: 20, paddingTop: 70,},
-  profileImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    marginBottom: 10,
-    backgroundColor: '#ff4081',
+  scrollContent: { paddingTop: 40, paddingBottom: 40 }, // Aumenta el paddingTop para dejar espacio al header fijo
+  
+  // --- SECCIÓN PERFIL (MODIFICADA) ---
+  profileSection: {
+    flexDirection: 'row', // Horizontal
+    alignItems: 'flex-start',
+    paddingHorizontal: 15,
+    marginBottom: 15,
+    paddingTop:50
   },
-  username: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  statsContainer: { flexDirection: 'row', alignItems: 'center', marginVertical: 10 },
-  statItem: { alignItems: 'center', paddingHorizontal: 20 },
-  statSeparator: { width: 1, height: '80%', backgroundColor: '#ccc' },
+  profileImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    marginRight: 15,
+    backgroundColor: '#ff4081',
+    marginLeft:5
+  },
+  statsWrapper: {
+    flex: 1, // Ocupa el espacio restante
+    marginTop: 5,
+  },
+  username: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 10,
+  },
+  statsContainer: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 10,
+  },
+  statItem: { alignItems: 'center', paddingRight: 10, paddingLeft:10 },
+  statSeparator: { width: 1, height: '80%', backgroundColor: '#ccc', },
   statNumber: { fontSize: 18, fontWeight: 'bold' },
   statLabel: { fontSize: 12, color: '#666' },
-  bio: { fontSize: 14, color: '#333', textAlign: 'center', marginHorizontal: 40, marginBottom: 15 },
-  editButton: { backgroundColor: '#e0e0e0', borderRadius: 5, paddingVertical: 8, paddingHorizontal: 30 },
+  bio: { fontSize: 14, color: '#333', lineHeight: 20, maxWidth: '90%' }, // Alineado a la izquierda
+  // --- FIN SECCIÓN PERFIL ---
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', // Alineado a la izquierda para empujar el botón
+    paddingHorizontal: 10,
+    marginBottom: 20,
+
+  },
+  editButton: { 
+    backgroundColor: '#e0e0e0', 
+    borderRadius: 8, // Ligeramente más redondeado
+    paddingVertical: 10, 
+    paddingHorizontal: 30,
+    width:129
+    // Alineación para que quede debajo de la foto/stats
+    // marginLeft: 105, 
+    // 90 (ancho imagen) + 15 (marginRight)
+  },
   editButtonText: { fontWeight: 'bold', color: 'black' },
   tabContainer: {
     flexDirection: 'row',
@@ -156,7 +217,7 @@ const styles = StyleSheet.create({
   activeTab: { borderBottomWidth: 2, borderBottomColor: '#FF4A50' },
   contentContainer: { paddingHorizontal: 15, paddingTop: 10 },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  thumbnail: { width: '32%', height: 120, borderRadius: 10, marginBottom: 8 },
+  thumbnail: { width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE * 1.33, borderRadius: 10, marginBottom: 8 }, // Altura de miniatura de video
 });
 
 const accountStyles = StyleSheet.create({
