@@ -283,7 +283,7 @@ const FeedScreen = () => {
         keyExtractor={keyExtractor}
         // ✅ SCROLL MÁS RÁPIDO Y SENSIBLE
         pagingEnabled
-        decelerationRate="normal" // ⬅️ Cambia de "fast" a "normal"
+        decelerationRate="fast" // ⬅️ Cambia de "fast" a "normal"
         snapToInterval={containerHeight} // ⬅️ NUEVO
         snapToAlignment="start" // ⬅️ NUEVO
         disableIntervalMomentum={true} // ⬅️ NUEVO - Hace que vaya de video en video sin inercia extra
