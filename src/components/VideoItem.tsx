@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 15,
-    paddingBottom: 30, 
+    paddingBottom: 35, 
     zIndex: 5,
   },
   usernameText: {
