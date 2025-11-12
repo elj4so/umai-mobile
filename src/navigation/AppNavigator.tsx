@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { ActivityIndicator, View } from 'react-native';
 
 // TabNavigator
 import MainTabNavigator from './MainTabNavigator';
@@ -12,9 +13,9 @@ import RegisterTypeScreen from '../screens/RegisterTypeScreen';
 import RegisterClientScreen from '../screens/RegisterClientScreen';
 import RegisterRestaurantScreen from '../screens/RegisterRestaurantScreen';
 
+// Servicio
+import authService from '../services/authService';
 
-// Define los tipos para el Stack RAÍZ
-// Tendrá solo dos "rutas": el flujo Auth y el flujo Main
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
@@ -22,7 +23,6 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-// 4. Define los tipos SOLO para el flujo Auth
 export type AuthStackParamList = {
   Startup1: undefined;
   Startup2: undefined;
@@ -34,7 +34,6 @@ export type AuthStackParamList = {
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 
-// 5. Un componente interno para el flujo de Autenticación
 const AuthFlowNavigator = () => {
   return (
     <AuthStack.Navigator
@@ -52,9 +51,31 @@ const AuthFlowNavigator = () => {
 };
 
 export const AppNavigator = () => {
-  // Aquí ira lógica de si el usuario está logueado o no
-  // Por ahora, siempre empezamos en 'Auth'
-  const isUserLoggedIn = false; 
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const isAuth = await authService.isAuthenticated();
+      setIsUserLoggedIn(isAuth);
+    } catch (error) {
+      console.error('Error verificando auth:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#FF6B6B" />
+      </View>
+    );
+  }
 
   return (
     <Stack.Navigator

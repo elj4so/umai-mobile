@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
+import { CommonActions } from '@react-navigation/native'; // ← AGREGAR ESTO
 
 // Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
@@ -43,16 +44,14 @@ export default function LoginScreen({ navigation }: Props) {
       
       console.log('✅ Login exitoso:', response);
       
-      Alert.alert(
-        '¡Bienvenido!',
-        `Hola ${response.data?.user?.name || 'Usuario'}`,
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('MainTabs'),
-          },
-        ]
+      // ✅ NAVEGACIÓN CORRECTA - Reset al stack Main
+      navigation.getParent()?.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main' }],
+        })
       );
+      
     } catch (error: any) {
       console.error('❌ Error en login:', error);
       Alert.alert(
