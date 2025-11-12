@@ -1,9 +1,7 @@
-// src/config/constants.js
-
 // URL del backend de Render
 const API_BASE_URL = 'https://umai-backend-vqq6.onrender.com/api/v1';
 
-console.log('🌐 API URL:', API_BASE_URL);
+console.log('API URL:', API_BASE_URL);
 
 export const API_CONFIG = {
   BASE_URL: API_BASE_URL,

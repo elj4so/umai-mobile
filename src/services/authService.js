@@ -1,5 +1,3 @@
-// src/services/authService.js
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_CONFIG, ENDPOINTS } from '../config/constants';
@@ -17,7 +15,7 @@ class AuthService {
     // Interceptor para requests
     this.api.interceptors.request.use(
       async (config) => {
-        console.log(`📤 Request: ${config.method.toUpperCase()} ${config.url}`);
+        console.log(`Request: ${config.method.toUpperCase()} ${config.url}`);
         const token = await AsyncStorage.getItem('accessToken');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -25,7 +23,7 @@ class AuthService {
         return config;
       },
       (error) => {
-        console.error('❌ Error Request:', error.message);
+        console.error('Error Request:', error.message);
         return Promise.reject(error);
       }
     );
@@ -33,21 +31,21 @@ class AuthService {
     // Interceptor para responses
     this.api.interceptors.response.use(
       (response) => {
-        console.log(`📥 Response: ${response.config.url} ${response.status}`);
+        console.log(`Response: ${response.config.url} ${response.status}`);
         return response;
       },
       async (error) => {
         if (error.code === 'ECONNABORTED') {
-          console.error('⏱️ Timeout: El servidor tardó demasiado');
+          console.error('Timeout: El servidor tardó demasiado');
           throw new Error('El servidor está tardando mucho. Puede estar despertando (Render tarda ~50 segundos).');
         }
         
         if (error.message === 'Network Error') {
-          console.error('🌐 Error de red');
+          console.error('Error de red');
           throw new Error('No se pudo conectar al servidor. Verifica tu conexión a internet.');
         }
 
-        console.error('❌ Error Response:', error.response?.status, error.message);
+        console.error('Error Response:', error.response?.status, error.message);
         
         if (error.response?.status === 401) {
           await this.logout();
@@ -65,7 +63,7 @@ class AuthService {
         password,
       });
 
-      console.log('📦 Response login:', JSON.stringify(response.data, null, 2));
+      console.log('Response login:', JSON.stringify(response.data, null, 2));
 
       const { data } = response;
       
@@ -99,7 +97,7 @@ class AuthService {
     try {
       const response = await this.api.post(ENDPOINTS.REGISTER, userData);
       
-      console.log('📦 Response register:', JSON.stringify(response.data, null, 2));
+      console.log('Response register:', JSON.stringify(response.data, null, 2));
 
       const { data } = response;
       

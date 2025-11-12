@@ -113,10 +113,10 @@ export default function RegisterClientScreen({ navigation }: Props) {
         phone,
         password,
         preferences: selectedCategories,
-        profileImage, // 👈 imagen incluida
+        profileImage,
       };
 
-      console.log('📤 Registro:', { ...userData, password: '***' });
+      console.log('Registro:', { ...userData, password: '***' });
 
       const result = await authService.registerCustomer(userData);
 
@@ -158,7 +158,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
         onPageSelected={(e) => setPage(e.nativeEvent.position)}
         scrollEnabled={false}
       >
-        {/* Página 1: Datos + Imagen */}
+        {/* Datos + Imagen */}
         <View key="1" style={styles.page}>
           <TouchableOpacity style={styles.imagePicker} onPress={pickImage} disabled={loading}>
             {profileImage ? (
@@ -197,7 +197,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Página 2: Contraseña */}
+        {/* Contraseña */}
         <View key="2" style={styles.page}>
           <CustomInput
             iconName="lock"
@@ -220,7 +220,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
           )}
         </View>
 
-        {/* Página 3: Categorías */}
+        {/* Categorías */}
         <View key="3" style={styles.page}>
           <Text style={styles.categoryTitle}>Categorías</Text>
           <Text style={styles.categorySubtitle}>Selecciona entre 1 y 5 categorías</Text>

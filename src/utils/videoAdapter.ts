@@ -1,5 +1,3 @@
-// src/utils/videoAdapter.ts
-
 // Tipos del backend
 interface BackendVideo {
   id: string;

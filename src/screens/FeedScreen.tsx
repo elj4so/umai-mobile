@@ -100,23 +100,23 @@ const FeedScreen = () => {
         setLoadingMore(true);
       }
 
-      console.log(`📥 Cargando videos - Página ${pageNum}`);
+      console.log(`Cargando videos - Página ${pageNum}`);
 
       const response = await videoService.getFeed(pageNum, 10);
 
-      console.log("✅ Response:", response);
+      console.log("Response:", response);
 
       if (response.success && response.data) {
         // Los videos vienen directamente en response.data como array
         const backendVideos = Array.isArray(response.data) ? response.data : [];
 
-        console.log(`📦 ${backendVideos.length} videos recibidos del backend`);
+        console.log(`${backendVideos.length} videos recibidos del backend`);
 
-        // ✅ ADAPTAR LOS VIDEOS AL FORMATO FRONTEND
+        // ADAPTAR LOS VIDEOS AL FORMATO FRONTEND
         const adaptedVideos = adaptVideos(backendVideos);
 
-        console.log(`✨ ${adaptedVideos.length} videos adaptados`);
-        console.log("📹 Primer video adaptado:", adaptedVideos[0]);
+        console.log(`${adaptedVideos.length} videos adaptados`);
+        console.log("Primer video adaptado:", adaptedVideos[0]);
 
         if (pageNum === 1) {
           setVideos(adaptedVideos);
@@ -131,7 +131,7 @@ const FeedScreen = () => {
         setPage(pageNum);
         setError(null);
       } else {
-        console.warn("⚠️ Respuesta sin datos válidos");
+        console.warn("Respuesta sin datos válidos");
         setError("No se pudieron cargar los videos");
 
         if (pageNum === 1) {
@@ -139,7 +139,7 @@ const FeedScreen = () => {
         }
       }
     } catch (error: any) {
-      console.error("❌ Error cargando videos:", error);
+      console.error("Error cargando videos:", error);
 
       const errorMessage = error.message || "Error al cargar videos";
       setError(errorMessage);
@@ -172,7 +172,7 @@ const FeedScreen = () => {
 
   const loadMore = () => {
     if (!loadingMore && !loading && hasMore && videos.length > 0) {
-      console.log("📄 Cargando más videos...");
+      console.log("Cargando más videos...");
       loadVideos(page + 1, false);
     }
   };
@@ -208,7 +208,7 @@ const FeedScreen = () => {
     if (containerHeight === 0) {
       const { height } = event.nativeEvent.layout;
       setContainerHeight(height);
-      console.log("📐 Altura del contenedor:", height);
+      console.log("Altura del contenedor:", height);
     }
   };
 
@@ -281,12 +281,12 @@ const FeedScreen = () => {
         data={videos}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        // ✅ SCROLL MÁS RÁPIDO Y SENSIBLE
+        // Scroll
         pagingEnabled
-        decelerationRate="fast" // ⬅️ Cambia de "fast" a "normal"
-        snapToInterval={containerHeight} // ⬅️ NUEVO
-        snapToAlignment="start" // ⬅️ NUEVO
-        disableIntervalMomentum={true} // ⬅️ NUEVO - Hace que vaya de video en video sin inercia extra
+        decelerationRate="fast" // Velocidad Scroll
+        snapToInterval={containerHeight}
+        snapToAlignment="start" 
+        disableIntervalMomentum={true} // Hace que vaya de video en video sin inercia extra
         showsVerticalScrollIndicator={false}
         getItemLayout={containerHeight > 0 ? getItemLayout : undefined}
         onViewableItemsChanged={onViewableItemsChanged}

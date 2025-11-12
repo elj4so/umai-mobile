@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { Star, Utensils, Settings } from 'lucide-react-native'; // ⬅️ Agregar Settings
+import { Star, Utensils, Settings } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// --- Dimensiones para el ancho de la miniatura (Grid) ---
+// Dimensiones para el ancho de la miniatura (Grid)
 const { width: screenWidth } = Dimensions.get('window');
 const THUMBNAIL_SIZE = (screenWidth - 45) / 3;
 
-// --- Datos de ejemplo ---
+// Datos de ejemplo
 const USER_PROFILE = {
   username: '@JoseTorresElReyDeAltoMando',
   followers: '200',
@@ -28,7 +28,7 @@ const FAVORITE_VIDEOS = [
   { id: '3', thumbnail: 'https://images.unsplash.com/photo-1612197527762-8cfb6e5b6b24?w=500' },
 ];
 
-// --- Tarjeta de restaurante seguido ---
+// Tarjeta de restaurante seguido
 const FollowedAccountCard = ({ account }) => {
   const [isFollowing, setIsFollowing] = useState(true);
   return (
@@ -49,7 +49,7 @@ const FollowedAccountCard = ({ account }) => {
 };
 
 // --- Pantalla principal ---
-const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation prop
+const ProfileScreen = ({ navigation }: any) => { // Navigation prop
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<'favorites' | 'restaurants'>('favorites');
 
@@ -67,7 +67,7 @@ const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation pr
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* 1. Sección Superior del Perfil (Diseño horizontal) */}
+        {/* Sección Superior del Perfil (Diseño horizontal) */}
         <View style={styles.profileSection}>
           <Image source={{ uri: USER_PROFILE.profilePicUrl }} style={styles.profileImage} />
           
@@ -97,7 +97,7 @@ const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation pr
           </TouchableOpacity>
         </View>
 
-        {/* 2. Tabs */}
+        {/* Tabs */}
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'favorites' && styles.activeTab]}
@@ -113,7 +113,7 @@ const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation pr
           </TouchableOpacity>
         </View>
 
-        {/* 3. Contenido dinámico */}
+        {/* Contenido dinámico */}
         <View style={styles.contentContainer}>
           {activeTab === 'favorites' ? (
             <View style={styles.gridContainer}>
@@ -134,7 +134,7 @@ const ProfileScreen = ({ navigation }: any) => { // ⬅️ Agregar navigation pr
   );
 };
 
-// --- Estilos ---
+// Estilos
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
   header: {

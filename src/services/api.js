@@ -1,5 +1,3 @@
-// src/services/api.js
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_CONFIG } from '../config/constants';
@@ -33,20 +31,20 @@ api.interceptors.request.use(
 // Interceptor: Manejo de respuestas
 api.interceptors.response.use(
   (response) => {
-    console.log('📥 Response:', response.config.url, response.status);
+    console.log('Response:', response.config.url, response.status);
     return response;
   },
   async (error) => {
     if (error.response) {
-      console.error('❌ Error Response:', {
+      console.error('Error Response:', {
         url: error.config?.url,
         status: error.response.status,
         data: error.response.data,
       });
     } else if (error.request) {
-      console.error('❌ Error Request:', error.message);
+      console.error('Error Request:', error.message);
     } else {
-      console.error('❌ Error:', error.message);
+      console.error('Error:', error.message);
     }
     return Promise.reject(error);
   }
