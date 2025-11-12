@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
         backgroundColor: 'black',
         top: -100,
+        height: 85,
     },
 });
 
@@ -49,6 +50,5 @@ export default function MainTabNavigator() {
       
       
     </Tab.Navigator>
-  );
+  );
 }
-

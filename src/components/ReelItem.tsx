@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback, Animated } from 'react-native';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { Search, Star, MessageSquare, ShoppingCart, Play, Pause } from 'lucide-react-native';
-import { useIsFocused } from '@react-navigation/native'; // 👈 Importante
+import { useIsFocused } from '@react-navigation/native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -12,7 +13,8 @@ const ReelItem = ({ data, isPlaying, onTogglePause }) => {
     p.play();
   });
 
-  const isScreenFocused = useIsFocused(); // 👈 Detecta si la pantalla está activa
+  const isScreenFocused = useIsFocused();
+  const tabBarHeight = useBottomTabBarHeight(); // 👈 Obtiene la altura del tab bar
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const [visible, setVisible] = useState(true);
 
@@ -43,9 +45,11 @@ const ReelItem = ({ data, isPlaying, onTogglePause }) => {
     showButton();
   };
 
+  const containerHeight = screenHeight - tabBarHeight; // 👈 Altura ajustada
+
   return (
     <TouchableWithoutFeedback onPress={handleTogglePause}>
-      <View style={styles.container}>
+      <View style={[styles.container, { height: containerHeight }]}>
         <VideoView
           style={styles.video}
           player={player}
@@ -96,21 +100,67 @@ const ReelItem = ({ data, isPlaying, onTogglePause }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { height: screenHeight - 83, width: screenWidth, backgroundColor: 'black', justifyContent: 'flex-end' },
+  container: { 
+    width: screenWidth, 
+    backgroundColor: 'black', 
+    justifyContent: 'flex-end' 
+  },
   video: { ...StyleSheet.absoluteFillObject },
   overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.25)' },
-  header: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 },
+  header: { 
+    position: 'absolute', 
+    top: 60, 
+    left: 20, 
+    right: 20, 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    zIndex: 10 
+  },
   headerTitle: { color: 'white', fontSize: 30, fontWeight: 'bold' },
-  playButton: { position: 'absolute', alignSelf: 'center', top: '45%', backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 50, padding: 15, zIndex: 15 },
-  rightControls: { position: 'absolute', right: 15, bottom: screenHeight * 0.2, alignItems: 'center', zIndex: 5 },
+  playButton: { 
+    position: 'absolute', 
+    alignSelf: 'center', 
+    top: '45%', 
+    backgroundColor: 'rgba(0,0,0,0.4)', 
+    borderRadius: 50, 
+    padding: 15, 
+    zIndex: 15 
+  },
+  rightControls: { 
+    position: 'absolute', 
+    right: 15, 
+    bottom: 150, // 👈 Ajustado para no estar tan cerca del tab bar
+    alignItems: 'center', 
+    zIndex: 5 
+  },
   iconMargin: { marginBottom: 25 },
-  footer: { paddingHorizontal: 15, zIndex: 5 },
+  footer: { 
+    paddingHorizontal: 15, 
+    paddingBottom: 20, // 👈 Agregado para dar espacio
+    zIndex: 5 
+  },
   usernameText: { color: 'white', fontWeight: 'bold', fontSize: 16, marginTop: 10 },
   descriptionText: { color: 'white', fontSize: 14, marginTop: 5, marginBottom: 10 },
-  mainOrderButton: { flexDirection: 'row', backgroundColor: '#4CAF50', borderRadius: 30, paddingVertical: 8, paddingHorizontal: 15, alignSelf: 'flex-start', marginBottom: 10, alignItems: 'center' },
+  mainOrderButton: { 
+    flexDirection: 'row', 
+    backgroundColor: '#4CAF50', 
+    borderRadius: 30, 
+    paddingVertical: 8, 
+    paddingHorizontal: 15, 
+    alignSelf: 'flex-start', 
+    marginBottom: 10, 
+    alignItems: 'center' 
+  },
   mainOrderText: { color: 'white', fontWeight: 'bold', marginRight: 5, fontSize: 14 },
   foodServiceButtons: { flexDirection: 'row', marginBottom: 10 },
-  serviceButton: { backgroundColor: 'white', borderRadius: 8, paddingVertical: 5, paddingHorizontal: 10, marginRight: 10 },
+  serviceButton: { 
+    backgroundColor: 'white', 
+    borderRadius: 8, 
+    paddingVertical: 5, 
+    paddingHorizontal: 10, 
+    marginRight: 10 
+  },
   serviceText: { fontWeight: 'bold', fontSize: 12 },
 });
 

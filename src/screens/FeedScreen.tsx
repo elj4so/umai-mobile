@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { FlatList, Dimensions, StyleSheet, View, StatusBar } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import ReelItem from '../components/ReelItem';
 
 const { height: screenHeight } = Dimensions.get('window');
@@ -9,7 +10,7 @@ const FEED_DATA = [
         id: '1',
         user: '@TastyDGO',
         description: 'Los Hermosos',
-        videoUrl: 'https://res.cloudinary.com/drfhnbhyo/video/upload/v1762834864/plateo/videos/878c0139-c09b-4640-b115-c742917dcfdc/uxqec3igou913auenrnz.mp4',
+        videoUrl: 'https://res.cloudcloud.com/drfhnbhyo/video/upload/v1762834864/plateo/videos/878c0139-c09b-4640-b115-c742917dcfdc/uxqec3igou913auenrnz.mp4',
         foodServiceOptions: [
             { name: 'Uber Eats', color: 'green' },
             { name: 'DiDi Food', color: '#FF7D00' },
@@ -49,6 +50,7 @@ const FEED_DATA = [
 const FeedScreen = () => {
   const [activeVideoId, setActiveVideoId] = useState(FEED_DATA[0].id);
   const [pausedVideos, setPausedVideos] = useState<Record<string, boolean>>({});
+  const tabBarHeight = useBottomTabBarHeight();
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
@@ -89,9 +91,11 @@ const FeedScreen = () => {
         pagingEnabled
         decelerationRate="fast"
         showsVerticalScrollIndicator={false}
+        snapToInterval={screenHeight - tabBarHeight}
+        snapToAlignment="start"
         getItemLayout={(data, index) => ({
-          length: screenHeight,
-          offset: screenHeight * index,
+          length: screenHeight - tabBarHeight,
+          offset: (screenHeight - tabBarHeight) * index,
           index,
         })}
         onViewableItemsChanged={onViewableItemsChanged}
