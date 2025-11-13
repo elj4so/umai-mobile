@@ -9,7 +9,7 @@ const THUMBNAIL_SIZE = (screenWidth - 45) / 3;
 
 // Datos de ejemplo
 const USER_PROFILE = {
-  username: '@JoseTorresElReyDeAltoMando',
+  username: 'Tacos El Guero',
   followers: '200',
   favorites: '3',
   bio: '¿Ya te sabes la nueva?\nVe-rem, ve-rem, ve-rem, yo',

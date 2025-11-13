@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackNavigationProp } from '@react-navigation/stack';
 import PagerView from 'react-native-pager-view';
 import { Feather } from '@expo/vector-icons';
-// import * as ImagePicker from 'expo-image-picker'; // expo install expo-image-picker
+import * as ImagePicker from 'expo-image-picker'; // expo install expo-image-picker
 
 // Navegación
 import { AuthStackParamList } from '../navigation/AppNavigator';
@@ -58,27 +58,27 @@ export default function RegisterRestaurantScreen({ navigation }: Props) {
   // Lógica de Imagen (Ejemplo)
   const pickImage = async () => {
     // Pedir permisos (necesario en iOS)
-    // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    // if (status !== 'granted') {
-    //   Alert.alert('Permiso necesario', 'Necesitas dar permisos para acceder a las fotos.');
-    //   return;
-    // }
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [1, 1],
-    //   quality: 1,
-    // });
-    // if (!result.cancelled) {
-    //   setProfilePic(result.uri);
-    // }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permiso necesario', 'Necesitas dar permisos para acceder a las fotos.');
+      return;
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setProfilePic(result.uri);
+    }
   };
 
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <WaveHeader />
-      <TouchableOpacity onPress={() => navigation.navigate('RegisterType')} style={styles.backButton}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       
@@ -166,16 +166,15 @@ const styles = StyleSheet.create({
     color: COLORS.text 
   },
   profilePicContainer: {
-    width: 110,
-    height: 110,
+    width: 120,
+    height: 120,
     borderRadius: 65,
-    backgroundColor: '#F7F7F7',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20,
-    borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderWidth: 2,
+    borderColor: '#000000ff',
   },
   profilePic: {
     width: 110,

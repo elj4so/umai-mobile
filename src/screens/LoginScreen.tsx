@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       <WaveHeader />
       <TouchableOpacity 
-        onPress={() => navigation.navigate('Startup2')} 
+        onPress={() => navigation.goBack()} 
         style={styles.backButton}
         disabled={loading}
       >
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     padding: 24,
     paddingBottom: 40,
   },

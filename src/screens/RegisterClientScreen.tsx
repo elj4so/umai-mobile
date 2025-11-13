@@ -140,7 +140,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
       <WaveHeader />
 
       <TouchableOpacity
-        onPress={() => navigation.navigate('RegisterType')}
+        onPress={() => navigation.goBack()}
         style={styles.backButton}
         disabled={loading}
       >
@@ -150,6 +150,16 @@ export default function RegisterClientScreen({ navigation }: Props) {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Registro Cliente</Text>
       </View>
+       <TouchableOpacity style={styles.imagePicker} onPress={pickImage} disabled={loading}>
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            ) : (
+              <View style={styles.imagePlaceholder}>
+                <Feather name="plus" size={40} color={COLORS.textSecondary} />
+              </View>
+            )}
+          </TouchableOpacity>
+          <Text style={styles.profilePicText}>Foto de perfil</Text>
 
       <PagerView
         style={styles.pager}
@@ -160,16 +170,7 @@ export default function RegisterClientScreen({ navigation }: Props) {
       >
         {/* Datos + Imagen */}
         <View key="1" style={styles.page}>
-          <TouchableOpacity style={styles.imagePicker} onPress={pickImage} disabled={loading}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.profileImage} />
-            ) : (
-              <View style={styles.imagePlaceholder}>
-                <Feather name="camera" size={32} color={COLORS.textSecondary} />
-                <Text style={styles.imageText}>Agregar foto de perfil</Text>
-              </View>
-            )}
-          </TouchableOpacity>
+         
 
           <CustomInput
             iconName="user"
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, fontWeight: 'bold', color: COLORS.text },
   pager: { flex: 1 },
   page: { padding: 24, paddingTop: 10 },
-  imagePicker: { alignSelf: 'center', marginBottom: 20 },
+  imagePicker: { alignSelf: 'center', marginBottom: 20, marginTop:7},
   imagePlaceholder: {
     width: 120,
     height: 120,
@@ -281,6 +282,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.textSecondary,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+   profilePicText: {
+    textAlign: 'center',
+    color: COLORS.textSecondary,
   },
   imageText: { color: COLORS.textSecondary, fontSize: 12, marginTop: 6 },
   profileImage: { width: 120, height: 120, borderRadius: 60 },

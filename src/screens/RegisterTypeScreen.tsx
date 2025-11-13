@@ -22,7 +22,7 @@ export default function RegisterTypeScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safeArea}>
       {/* TODO: Actualizar WaveHeader para que acepte un botón de "atrás" */}
       <WaveHeader />
-      <TouchableOpacity onPress={() => navigation.navigate('Startup2')} style={styles.backButton}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Feather name="arrow-left" size={28} color={COLORS.white} />
       </TouchableOpacity>
       <View style={styles.contentContainer}>

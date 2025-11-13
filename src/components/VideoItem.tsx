@@ -138,12 +138,11 @@ const VideoPlayerComponent = ({ data, isVisible }: { data: VideoData; isVisible:
     try {
       const previousState = isFavorited;
 
-      // Optimistic update
       setIsFavorited(!isFavorited);
 
       await videoService.favoriteVideo(data.id);
     } catch (error) {
-      console.error('❌ Error al guardar favorito:', error);
+      console.error('Error al guardar favorito:', error);
       // Revertir en caso de error
       setIsFavorited(isFavorited);
       Alert.alert('Error', 'No se pudo guardar el video');
@@ -184,7 +183,7 @@ const VideoPlayerComponent = ({ data, isVisible }: { data: VideoData; isVisible:
         );
       }
     } catch (error) {
-      console.error('❌ Error al abrir link:', error);
+      console.error('Error al abrir link:', error);
       Alert.alert('Error', 'No se pudo abrir el link de la plataforma');
     }
   };
